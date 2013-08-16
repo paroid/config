@@ -135,14 +135,15 @@ set backspace=2
 set nowrap
 "numbers
 set number
-:au FocusLost * :set number
-:au FocusGained * :set relativenumber
-autocmd InsertEnter * :set number
-autocmd InsertLeave * :set relativenumber
+au FocusLost * :set number
+au FocusGained * :set relativenumber
+au InsertEnter * :set number
+au InsertLeave * :set relativenumber
 
 "ctags
 set tags=tags
-set tags+=E:\Vim\stl_tags
+"set tags+=E:\Vim\stl_tags
+set tags+=$VIMRUNTIME\stl_tags
 set history=200
 "Dir setting
 set autochdir
@@ -170,6 +171,7 @@ set foldlevel=100
 set nobackup
 set ruler
 set scrolloff=3
+set nojoinspaces
 
 "Fold Code With Space
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
@@ -206,14 +208,14 @@ au InsertLeave * hi StatusLine guibg=grey70 guifg=#363636 gui=none
 set statusline=[%n]%<%f%y%h%m%r%=[%b\ 0x%B]\ %l\/\%L,%c%V\ Page\ %N\ %P
 
 "set cursor to right position when open file
-autocmd BufReadPost *
+au BufReadPost *
             \ if line("'\"") > 0 && line("'\"") <= line("$") |
             \   exe "normal! g`\"" |
             \ endif
 
 if has("gui_running")
-    autocmd InsertLeave * se nocul
-    autocmd InsertEnter * se cul
+    au InsertLeave * se nocul
+    au InsertEnter * se cul
 endif
 
 "short mapping
@@ -222,7 +224,9 @@ let mapleader=','
 inoremap jj <ESC>
 nnoremap ; :
 nnoremap <silent> <leader>/ :noh<CR>
-nnoremap <silent> <leader>w :w<CR>
+nnoremap <silent> <leader>w :update<CR>
+nnoremap <C-s> :update<CR>
+inoremap <C-s> <ESC>:update<CR>
 nnoremap <silent> <leader>q :q<CR>
 nnoremap <silent> <leader>l :marks<CR>
 nnoremap <silent> <leader>. :call NumberToggle()<CR>
@@ -230,8 +234,8 @@ nnoremap <silent> <leader>r :MRU<CR>
 nnoremap <silent> <leader>c :Calendar<CR>
 nnoremap <silent> <leader>z ``ggvG=``
 "wrap & no warp
-nnoremap <silent> wr :set wrap<CR>
-nnoremap <silent> wR :set nowrap<CR>
+nnoremap <silent> <leader>wr :set wrap<CR>
+nnoremap <silent> <leader>wR :set nowrap<CR>
 "quick load _vimrc
 nnoremap <silent> <leader>e :e E:\Vim\_vimrc <CR>
 "Grep
@@ -242,6 +246,8 @@ inoremap { {}<ESC>i
 inoremap [ []<ESC>i
 inoremap ' ''<ESC>i
 inoremap " ""<ESC>i
+"remove the only join space
+nnoremap J Jx
 "Window switch 
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -308,7 +314,7 @@ nnoremap <leader>wtt :VimwikiTable
 
 "window manager
 nnoremap <F7> :WMToggle<CR>
-let g:AutoOpenWinManager = 0
+let g:AutoOpenWinManager = 1
 let g:NERDTree_title="[NERD Tree]" 
 let g:winManagerWindowLayout='NERDTree|TagList,BufExplorer'
 function! NERDTree_Start()
