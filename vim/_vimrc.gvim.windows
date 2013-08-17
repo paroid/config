@@ -5,79 +5,79 @@ behave mswin
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set diffexpr=MyDiff()
 function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  let eq = ''
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      let cmd = '""' . $VIMRUNTIME . '\diff"'
-      let eq = '"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+	let opt = '-a --binary '
+	if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+	if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+	let arg1 = v:fname_in
+	if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+	let arg2 = v:fname_new
+	if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+	let arg3 = v:fname_out
+	if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+	let eq = ''
+	if $VIMRUNTIME =~ ' '
+		if &sh =~ '\<cmd'
+			let cmd = '""' . $VIMRUNTIME . '\diff"'
+			let eq = '"'
+		else
+			let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+		endif
+	else
+		let cmd = $VIMRUNTIME . '\diff'
+	endif
+	silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 endfunction
 
 "Astyle : format code
 func Astyle()
-    if &filetype == 'c' || &filetype == 'cpp' || &filetype == 'java'
-        exec "w"
-        exec "!Astyle -A2 -p -xd -S -n -y --indent=spaces %"
-        exec "e!"
-    endif
+	if &filetype == 'c' || &filetype == 'cpp' || &filetype == 'java'
+		exec "w"
+		exec "!Astyle -A2 -p -xd -S -n -y --indent=spaces %"
+		exec "e!"
+	endif
 endfunc
 
 "Compile : C,C++,Java
 func Compile()
-exec "w"
-"C
-if &filetype == 'c'
-exec "!gcc -Wl,-enable-auto-import % -g -o %<.exe"
-"C++
-elseif &filetype == 'cpp'
-exec "!g++ -Wl,-enable-auto-import % -g -o %<.exe"
-"Java
-elseif &filetype == 'java' 
-exec "!javac %" 
-"python
-elseif &filetype == 'python'
-exec "!python %"
-endif
+	exec "w"
+	"C
+	if &filetype == 'c'
+		exec "!gcc -Wl,-enable-auto-import % -g -o %<.exe"
+		"C++
+	elseif &filetype == 'cpp'
+		exec "!g++ -Wl,-enable-auto-import % -g -o %<.exe"
+		"Java
+	elseif &filetype == 'java' 
+		exec "!javac %" 
+		"python
+	elseif &filetype == 'python'
+		exec "!python %"
+	endif
 endfunc
 
 "Run C,C++,Java
 func Run()
-if &filetype == 'c' || &filetype == 'cpp'
-exec "!%<.exe"
-"Java
-elseif &filetype == 'java' 
-exec "!java %<"
-endif
+	if &filetype == 'c' || &filetype == 'cpp'
+		exec "!%<.exe"
+		"Java
+	elseif &filetype == 'java' 
+		exec "!java %<"
+	endif
 endfunc
 
 "Debug C,C++,Java
 func Debug()
-exec "w"
-"C
-if &filetype == 'c'
-exec "!gdb %<.exe"
-"C++
-elseif &filetype == 'cpp'
-exec "!gdb %<.exe"
-"Java
-elseif &filetype == 'java' 
-exec "!jdb %<"
-endif
+	exec "w"
+	"C
+	if &filetype == 'c'
+		exec "!gdb %<.exe"
+		"C++
+	elseif &filetype == 'cpp'
+		exec "!gdb %<.exe"
+		"Java
+	elseif &filetype == 'java' 
+		exec "!jdb %<"
+	endif
 endfunc
 
 "Toggle Menu and Toolbar
@@ -88,20 +88,41 @@ set guioptions-=l
 set guioptions-=L
 "menu bar toggle
 nnoremap <silent> <F2> :if &guioptions =~# 'T' <Bar>
-        \set guioptions-=T <Bar>
-        \set guioptions-=m <bar>
-    \else <Bar>
-        \set guioptions+=T <Bar>
-        \set guioptions+=m <Bar>
-    \endif<CR>
+			\set guioptions-=T <Bar>
+			\set guioptions-=m <bar>
+			\else <Bar>
+			\set guioptions+=T <Bar>
+			\set guioptions+=m <Bar>
+			\endif<CR>
 
 function! NumberToggle()
-  if(&relativenumber == 1)
-    set number
-  else
-    set relativenumber
-  endif
+	if(&relativenumber == 1)
+		set number
+	else
+		set relativenumber
+	endif
 endfunc
+
+function! SetNumber()
+	if &filetype != 'taglist' && &filetype != 'nerdtree'
+		:set number
+	endif
+endfunc
+
+function! SetRelativeNumber()
+	if &filetype != 'taglist' && &filetype != 'nerdtree'
+		:set relativenumber
+	endif
+endfunc
+
+function! NoNumber()
+	if &nu == 1
+		set nonu
+	elseif &rnu == 1
+		set nornu
+	endif
+endfunc
+
 
 
 "map function with short key
@@ -135,11 +156,14 @@ set backspace=2
 set nowrap
 "numbers
 set number
-au FocusLost * :set number
-au FocusGained * :set relativenumber
-au InsertEnter * :set number
-au InsertLeave * :set relativenumber
-
+"auto set number"
+au FocusLost * call SetNumber()
+au FocusGained * call SetRelativeNumber()
+au InsertEnter * call SetNumber()
+au InsertLeave * call SetRelativeNumber()
+"no number for plug-in
+au FileType taglist call NoNumber()
+au FileType nerdtree call NoNumber()
 "ctags
 set tags=tags
 "set tags+=E:\Vim\stl_tags
@@ -184,17 +208,17 @@ set noerrorbells
 
 "tab setting
 if has("gui_running")
-    "    map! tn tabnew
-    nmap <C-n> :tabnew<CR>
-    nmap <C-c> :tabclose<CR>
+	"    map! tn tabnew
+	nmap <silent> <leader>tn :tabnew<CR>
+	nmap <silent> <leader>tc :tabclose<CR>
 endif
 set tabpagemax=12
 
 function ShortTabLabel ()
-    let bufnrlist = tabpagebuflist (v:lnum)
-    let label = bufname (bufnrlist[tabpagewinnr (v:lnum) -1])
-    let filename = fnamemodify (label, ':t')
-    return filename
+	let bufnrlist = tabpagebuflist (v:lnum)
+	let label = bufname (bufnrlist[tabpagewinnr (v:lnum) -1])
+	let filename = fnamemodify (label, ':t')
+	return filename
 endfunction
 
 set guitablabel=%{ShortTabLabel()}
@@ -209,13 +233,13 @@ set statusline=[%n]%<%f%y%h%m%r%=[%b\ 0x%B]\ %l\/\%L,%c%V\ Page\ %N\ %P
 
 "set cursor to right position when open file
 au BufReadPost *
-            \ if line("'\"") > 0 && line("'\"") <= line("$") |
-            \   exe "normal! g`\"" |
-            \ endif
+			\ if line("'\"") > 0 && line("'\"") <= line("$") |
+			\   exe "normal! g`\"" |
+			\ endif
 
 if has("gui_running")
-    au InsertLeave * se nocul
-    au InsertEnter * se cul
+	au InsertLeave * se nocul
+	au InsertEnter * se cul
 endif
 
 "short mapping
@@ -265,7 +289,7 @@ nnoremap j gj
 nnoremap k gk
 nnoremap <A-j> j
 nnoremap <A-k> k
-"disable arrow key force to improve
+"disable arrow key
 nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
@@ -280,9 +304,24 @@ inoremap <C-j> <down>
 inoremap <C-k> <up>
 inoremap <C-l> <right>
 
-"Work base Dir
+"g command
+nnoremap <leader>del :g/^\s*$/d<CR>
+nnoremap <leader>dl :g/^$/,/./-j<CR>
+"fix windows mappings
+noremap <C-v> <C-v>
+noremap <C-y> <C-y>
+noremap <C-i> <C-a>
+noremap <C-x> <C-x>
+"Select all
+noremap <C-a> <ESC>ggvG
+"system clipboard paste
+inoremap <C-q> <esc>"+pa
+nnoremap <C-q> "+p
+"copy to system clipboard
+noremap <C-c> "+y
+"work base dir
 nnoremap <C-b> :cd D:\A-Project\CC\Vim<CR>
-cd D:\A-Project\CC\Vim
+cd d:\a-project\cC\Vim
 
 "plug-in  setting
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -318,7 +357,7 @@ let g:AutoOpenWinManager = 1
 let g:NERDTree_title="[NERD Tree]" 
 let g:winManagerWindowLayout='NERDTree|TagList,BufExplorer'
 function! NERDTree_Start()
-    exec 'NERDTree'
+	exec 'NERDTree'
 endfunction
 
 "NERDTree
@@ -326,10 +365,9 @@ let NERDTreeShowBookmarks=1
 let NERDTreeWinSize=24
 
 function! NERDTree_IsValid()
-    return 1
+	return 1
 endfunction
 "SuperTab
 let g:SuperTabDefaultCompletionType = "context"
 "fenceView
 let g:fencview_autodetect = 1
-
