@@ -167,7 +167,8 @@ au FileType nerdtree call NoNumber()
 "ctags
 set tags=tags
 "set tags+=E:\Vim\stl_tags
-set tags+=$VIMRUNTIME\stl_tags
+set tags+=$VIM\stl_tags
+nnoremap <leader>tu :TlistUpdate<CR>
 set history=200
 "Dir setting
 set autochdir
@@ -208,7 +209,7 @@ set noerrorbells
 
 "tab setting
 if has("gui_running")
-	"    map! tn tabnew
+	let mapleader = ','
 	nmap <silent> <leader>tn :tabnew<CR>
 	nmap <silent> <leader>tc :tabclose<CR>
 endif
@@ -261,7 +262,7 @@ nnoremap <silent> <leader>z ``ggvG=``
 nnoremap <silent> <leader>wr :set wrap<CR>
 nnoremap <silent> <leader>wR :set nowrap<CR>
 "quick load _vimrc
-nnoremap <silent> <leader>e :e E:\Vim\_vimrc <CR>
+nnoremap <silent> <leader>e :e $VIM\_vimrc <CR>
 "Grep
 nnoremap <silent> <F10> :Grep<CR>
 "Auto Complete Bracket
@@ -336,9 +337,9 @@ let Tlist_Enable_Fold_Column = 0
 "let Tlist_Auto_Open = 1
 
 "Pydiction
-let g:pydiction_location = 'E:\Vim\vim71\ftplugin\pydiction\complete-dict'
+let g:pydiction_location = '$VIMRUNTIME\ftplugin\pydiction\complete-dict'
 "Cscope
-cs a D:\A-Project\CC\Vim\cscope.out
+cs a $VIM\cscope.out
 
 "VimWiki
 let g:vimwiki_camel_case = 0
