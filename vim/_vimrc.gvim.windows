@@ -1,3 +1,8 @@
+set nocompatible
+filetype on
+filetype plugin on
+filetype indent on
+syntax on
 source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
 behave mswin
@@ -134,10 +139,6 @@ nnoremap <F6> :call Debug()<CR>
 
 "General setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-filetype on
-filetype plugin on
-filetype indent on
-set nocompatible
 "language & encoding
 let $LANG = 'en_US'
 lang messages en_US,utf-8
@@ -224,13 +225,35 @@ endfunction
 
 set guitablabel=%{ShortTabLabel()}
 
-"status bar
+"status line
 highlight CurrentLine guibg=grey30
 au! Cursorhold * exe 'match CurrentLine /\%' . line('.') . 'l.*/'
 set ut=100
-au InsertEnter * hi StatusLine guibg=#616D29 guifg=#FCFCFC gui=none
-au InsertLeave * hi StatusLine guibg=grey70 guifg=#363636 gui=none
-set statusline=[%n]%<%f%y%h%m%r%=[%b\ 0x%B]\ %l\/\%L,%c%V\ Page\ %N\ %P
+au InsertEnter * hi User7 guibg=#616d29
+au InsertLeave * hi User7 guibg=#313131
+"colors
+hi User1 guifg=#ae81ff guibg=#313131 
+hi User2 guifg=#ee3333 guibg=#212121
+hi User3 guifg=#66d9ef guibg=#313131 
+hi User4 guifg=#a0ee40 guibg=#040404 
+hi User5 guifg=#eeee40 guibg=#313131 
+hi User6 guifg=#d0d0d0 guibg=#040404 
+hi User7 guifg=#d0d0d0 guibg=#313131
+
+set statusline =
+set statusline +=%1*[%n]%<\ 
+set statusline +=%6*\ %f\ 
+set statusline +=%2*%y%h%m%r
+set statusline +=%6*\ %{(&fenc==\"\"?&enc:&fenc)}\ 
+set statusline +=%7*\ %=
+set statusline +=%3*\ [
+set statusline +=%1*%b
+set statusline +=%5*\ 0x%B
+set statusline +=%3*]\ 
+set statusline +=%4*\ %l
+set statusline +=%6*\/\%L,
+set statusline +=%4*%c%V\ 
+set statusline +=%1*\ %P\ 
 
 "set cursor to right position when open file
 au BufReadPost *
@@ -304,7 +327,9 @@ inoremap <C-h> <left>
 inoremap <C-j> <down>
 inoremap <C-k> <up>
 inoremap <C-l> <right>
-
+"visual indent
+vnoremap > >gv
+vnoremap < <gv
 "g command
 nnoremap <leader>del :g/^\s*$/d<CR>
 nnoremap <leader>dl :g/^$/,/./-j<CR>
@@ -321,7 +346,7 @@ nnoremap <C-q> "+p
 "copy to system clipboard
 noremap <C-c> "+y
 "work base dir
-nnoremap <C-b> :cd D:\A-Project\CC\Vim<CR>
+nnoremap <leader>b :cd D:\A-Project\CC\Vim<CR>
 cd d:\a-project\cC\Vim
 
 "plug-in  setting
