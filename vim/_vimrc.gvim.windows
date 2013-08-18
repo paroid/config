@@ -1,116 +1,136 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" _vimrc file for gvim
+" author: paroid
+" email:  paroid@paroid.org
+" update: 2013-08-18
+" Happy Vimming! 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible
 filetype on
 filetype plugin on
 filetype indent on
 syntax on
-"source $VIMRUNTIME/vimrc_example.vim
-"source $VIMRUNTIME/mswin.vim
+let mapleader=','
+
 "some custom vim function
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Astyle : format code
+"Astyle : format code, need Astyle.exe
 func Astyle()
-	if &filetype == 'c' || &filetype == 'cpp' || &filetype == 'java'
-		exec "w"
-		exec "!Astyle -A2 -p -xd -S -n -y --indent=spaces %"
-		exec "e!"
-	endif
+    if &filetype == 'c' || &filetype == 'cpp' || &filetype == 'java'
+        :update
+        exec "!Astyle -A2 -p -xd -S -n -y --indent=spaces %"
+        exec "e!"
+    endif
 endfunc
-
-"Compile : C,C++,Java
+"some compiler cmd
+"need gcc/g++/java/python
 func Compile()
-	exec "w"
-	"C
-	if &filetype == 'c'
-		exec "!gcc -Wl,-enable-auto-import % -g -o %<.exe"
-		"C++
-	elseif &filetype == 'cpp'
-		exec "!g++ -Wl,-enable-auto-import % -g -o %<.exe"
-		"Java
-	elseif &filetype == 'java' 
-		exec "!javac %" 
-		"python
-	elseif &filetype == 'python'
-		exec "!python %"
-	endif
+    :update
+    if &filetype == 'c'
+        exec "!gcc -Wl,-enable-auto-import % -g -o %<.exe"
+    elseif &filetype == 'cpp'
+        exec "!g++ -Wl,-enable-auto-import % -g -o %<.exe"
+    elseif &filetype == 'java' 
+        exec "!javac %" 
+    elseif &filetype == 'python'
+        exec "!python %"
+    endif
 endfunc
 
-"Run C,C++,Java
+"Run
 func Run()
-	if &filetype == 'c' || &filetype == 'cpp'
-		exec "!%<.exe"
-		"Java
-	elseif &filetype == 'java' 
-		exec "!java %<"
-	endif
+    if &filetype == 'c' || &filetype == 'cpp'
+        exec "!%<.exe"
+    elseif &filetype == 'java' 
+        exec "!java %<"
+    endif
 endfunc
 
-"Debug C,C++,Java
+"Debug
 func Debug()
-	exec "w"
-	"C
-	if &filetype == 'c'
-		exec "!gdb %<.exe"
-		"C++
-	elseif &filetype == 'cpp'
-		exec "!gdb %<.exe"
-		"Java
-	elseif &filetype == 'java' 
-		exec "!jdb %<"
-	endif
+    if &filetype == 'c'
+        exec "!gdb %<.exe"
+    elseif &filetype == 'cpp'
+        exec "!gdb %<.exe"
+    elseif &filetype == 'java' 
+        exec "!jdb %<"
+    endif
 endfunc
 
 "Toggle Menu and Toolbar
-set guioptions-=m
-set guioptions-=T
-set guioptions-=r
-set guioptions-=l
-set guioptions-=L
-"menu bar toggle
-nnoremap <silent> <F2> :if &guioptions =~# 'T' <Bar>
-			\set guioptions-=T <Bar>
-			\set guioptions-=m <bar>
-			\else <Bar>
-			\set guioptions+=T <Bar>
-			\set guioptions+=m <Bar>
-			\endif<CR>
+function! ToggleMenuBar()
+    if &guioptions =~# 'T' 
+        set guioptions-=T 
+        set guioptions-=m 
+    else 
+        set guioptions+=T
+        set guioptions+=m
+    endif
+endfunc
 
 function! NumberToggle()
-	if(&relativenumber == 1)
-		set norelativenumber
-		set number
-	else
-		set relativenumber
-	endif
+    if(&relativenumber == 1)
+        set norelativenumber
+        set number
+    else
+        set relativenumber
+    endif
 endfunc
 
 function! SetNumber()
-	if &filetype != 'taglist' && &filetype != 'nerdtree'
-		set norelativenumber
-		set number
-	endif
+    if &filetype != 'taglist' && &filetype != 'nerdtree'
+        set norelativenumber
+        set number
+    endif
 endfunc
 
 function! SetRelativeNumber()
-	if &filetype != 'taglist' && &filetype != 'nerdtree'
-		:set relativenumber
-	endif
+    if &filetype != 'taglist' && &filetype != 'nerdtree'
+        :set relativenumber
+    endif
 endfunc
 
 function! NoNumber()
-	if &nu == 1
-		set nonumber
-	elseif &rnu == 1
-		set norelativenumber
-	endif
+    if &nu == 1
+        set nonumber
+    elseif &rnu == 1
+        set norelativenumber
+    endif
 endfunc
 
+function HasFoldedLine()
+    let lnum = 1
+    while lnum <= line("$")
+        if foldclosed(lnum) != -1
+            return 1
+        endif
+        let lnum += 1
+    endwhile
+    return 0
+endfunc
 
+"set cursor to right position when open file
+function! RestoreCursorPos()
+    if line("'\"") > 0 && line("'\"") <= line("$") 
+        normal! g`" 
+    endif
+endfunc
+
+function! FormatIndent()
+    :normal gg=G
+    ;normal ''
+endfunc
 
 "map function with short key
+nnoremap <F1> :h 
+inoremap <F1> <ESC>:h 
+nnoremap <F2> :call ToggleMenuBar()<CR>
 nnoremap <F3> :call Astyle()<CR>
 nnoremap <F4> :call Compile()<CR>
 nnoremap <F5> :call Run()<CR>
 nnoremap <F6> :call Debug()<CR>
+nnoremap <F7> :WMToggle<CR>
+nnoremap <F10> :Grep<CR>
 
 
 "General setting
@@ -132,6 +152,11 @@ set tabstop=4
 set shiftwidth=4
 set backspace=2
 set nowrap
+"Fold Code With Space
+nnoremap <silent> <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+nnoremap <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zM')<CR>
+"auto indent
+au Bufwrite,FileReadPre *.cpp,*.c,*.java,*.py  call FormatIndent()
 
 "numbers
 set number
@@ -143,10 +168,12 @@ au InsertLeave * call SetRelativeNumber()
 "no number for plug-in
 au FileType taglist call NoNumber()
 au FileType nerdtree call NoNumber()
+
+au BufReadPost * call RestoreCursorPos()
 "ctags
 set tags=tags
 set tags+=$VIM\stl_tags
-nnoremap <leader>tu :TlistUpdate<CR>
+nnoremap <leader>tt :TlistUpdate<CR>
 set history=200
 "Dir setting
 set autochdir
@@ -158,6 +185,7 @@ set wildignore=*.o,*.obj,*.bak,*.exe
 set showmatch
 set matchtime=8
 set ignorecase
+set smartcase
 set incsearch
 set hlsearch
 set confirm
@@ -176,30 +204,32 @@ set nobackup
 set ruler
 set scrolloff=3
 set nojoinspaces
-set updatetime=100
-
-"Fold Code With Space
-nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
-
+set updatetime=500
 set backspace=eol,start,indent
-" startup mercy information
-"set shortmess=atI
 set report=0
 set noerrorbells
 
 "tab setting
-if has("gui_running")
-	let mapleader = ','
-	nmap <silent> <leader>tn :tabnew<CR>
-	nmap <silent> <leader>tc :tabclose<CR>
-endif
 set tabpagemax=12
+if has("gui_running")
+    let mapleader = ','
+    nmap <leader>tn :tabnew<CR>
+    nmap <leader>tc :tabclose<CR>
+    "remove gui menubar
+    set guioptions-=m
+    set guioptions-=T
+    set guioptions-=r
+    set guioptions-=l
+    set guioptions-=L
+    au InsertLeave * se nocul
+    au InsertEnter * se cul
+endif
 
 function ShortTabLabel ()
-	let bufnrlist = tabpagebuflist (v:lnum)
-	let label = bufname (bufnrlist[tabpagewinnr (v:lnum) -1])
-	let filename = fnamemodify (label, ':t')
-	return filename
+    let bufnrlist = tabpagebuflist (v:lnum)
+    let label = bufname (bufnrlist[tabpagewinnr (v:lnum) -1])
+    let filename = fnamemodify (label, ':t')
+    return filename
 endfunction
 
 set guitablabel=%{ShortTabLabel()}
@@ -209,9 +239,11 @@ hi CurrentLine guibg=#424242
 hi CursorLine guibg=#424242
 au InsertEnter * hi CursorLine guibg=#122428
 au InsertLeave * hi CursorLine guibg=#424242
-au! Cursorhold * exe 'match CurrentLine /\%' . line('.') . 'l.*/'
-au InsertEnter * hi User7 guibg=#616d29
-au InsertLeave * hi User7 guibg=#313131
+au InsertEnter * hi CurrentLine guibg=#122428
+au InsertLeave * hi CurrentLine guibg=#424242
+"au! Cursorhold * exe 'match CurrentLine /\%' . line('.') . 'l.*/'
+au InsertEnter * hi User7 guifg=#070707 guibg=#a3bd29
+au InsertLeave * hi User7 guifg=#d0d0d0 guibg=#313131
 "colors
 hi User1 guifg=#ae81ff guibg=#313131 
 hi User2 guifg=#fd971f guibg=#212121
@@ -224,9 +256,9 @@ hi User7 guifg=#d0d0d0 guibg=#313131
 set statusline =
 set statusline +=%1*[%n]%<\ 
 set statusline +=%6*\ %f\ 
-set statusline +=%2*%y%h%m%r
+set statusline +=%2*%y%m%r
 set statusline +=%6*\ %{&ff}\ \|\ %{(&fenc==\"\"?&enc:&fenc)}\ 
-set statusline +=%7*\ %=
+set statusline +=%7*%=%{strftime('%H:%M')}\ 
 set statusline +=%3*\ [
 set statusline +=%1*%b
 set statusline +=%5*\ 0x%B
@@ -236,49 +268,38 @@ set statusline +=%6*\/\%L,
 set statusline +=%4*%c%V\ 
 set statusline +=%3*\ %P\ 
 
-"set cursor to right position when open file
-au BufReadPost *
-			\ if line("'\"") > 0 && line("'\"") <= line("$") |
-			\   exe "normal! g`\"" |
-			\ endif
-
-if has("gui_running")
-	au InsertLeave * se nocul
-	au InsertEnter * se cul
-endif
-
 "short mapping
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader=','
-inoremap jj <ESC>
+inoremap jk <ESC>
 nnoremap ; :
 vnoremap ; :
 snoremap ; :
-nnoremap <silent> <leader>/ :noh<CR>
-nnoremap <silent> <leader>w :update<CR>
+nnoremap <leader>/ :noh<CR>
+nnoremap <leader>W :update !sudo tee %<CR>
+nnoremap <leader>w :update<CR>
 noremap <C-S>	:update<CR>
 vnoremap <C-S>	<C-C>:update<CR>
 inoremap <C-S>	<C-O>:update<CR>
-nnoremap <silent> <leader>q :q<CR>
-nnoremap <silent> <leader>l :marks<CR>
-nnoremap <silent> <leader>. :call NumberToggle()<CR>
-nnoremap <silent> <leader>r :MRU<CR>
-nnoremap <silent> <leader>c :Calendar<CR>
-nnoremap <silent> <leader>z ``ggvG=``
+nnoremap <leader>q :q<CR>
+nnoremap <leader>l :marks<CR>
+nnoremap <leader>. :call NumberToggle()<CR>
+nnoremap <leader>r :MRU<CR>
+nnoremap <leader>c :Calendar<CR>
+nnoremap <leader>z :call FormatIndent()<CR>
+"hex edit
+nnoremap <leader>h :%!xxd<CR>
+nnoremap <leader>H :%!xxd -r<CR>
 "wrap & no warp
-nnoremap <silent> <leader>wr :set wrap<CR>
-nnoremap <silent> <leader>wR :set nowrap<CR>
+nnoremap <leader>wr :set wrap<CR>
+nnoremap <leader>wR :set nowrap<CR>
 "quick load _vimrc
-nnoremap <silent> <leader>e :e $VIM\_vimrc <CR>
-"Grep
-nnoremap <silent> <F10> :Grep<CR>
+nnoremap <leader>e :e $VIM\_vimrc <CR>
 "Auto Complete Bracket
 inoremap ( ()<ESC>i
 inoremap { {}<ESC>i
 inoremap [ []<ESC>i
 inoremap ' ''<ESC>i
 inoremap " ""<ESC>i
-inoremap <C-tab> <C-x><C-n>
 "remove the only join space
 nnoremap J Jx
 "Window switch 
@@ -312,13 +333,15 @@ inoremap <C-h> <left>
 inoremap <C-j> <down>
 inoremap <C-k> <up>
 inoremap <C-l> <right>
+inoremap jl <right>
+inoremap jf <left>
 "visual indent
 vnoremap > >gv
 vnoremap < <gv
-"g command
+"quick delete command
 nnoremap <leader>del :g/^\s*$/d<CR>
 nnoremap <leader>dl :g/^$/,/./-j<CR>
-"fix windows mappings
+"inc
 noremap <C-i> <C-a>
 "Select all
 noremap <C-A> gggH<C-O>G
@@ -332,9 +355,11 @@ inoremap <C-q> <esc>"+pa
 nnoremap <C-q> "+p
 "copy to system clipboard
 noremap <C-c> "+y
+"filename completion
+inoremap <A-f> <C-x><C-f>
 "work base dir
-nnoremap <leader>B :cd D:\A-Project\CC\Vim<CR>
-cd d:\a-project\cC\Vim
+nnoremap <leader>bb :cd D:\A-Project\CC\Vim<CR>
+cd D:\A-Project\CC\Vim
 
 "plug-in  setting
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -346,11 +371,10 @@ let Tlist_Ctags_Cmd = 'ctags'
 let Tlist_Compart_Format = 1
 let Tlist_File_Fold_Auto_Close = 0
 let Tlist_Enable_Fold_Column = 0
-"let Tlist_Auto_Open = 1
 
-"Pydiction
+"pydiction
 let g:pydiction_location = '$VIMRUNTIME\ftplugin\pydiction\complete-dict'
-"Cscope
+"cscope
 cs a $VIM\cscope.out
 "css color
 let g:cssColorVimDoNotMessMyUpdatetime = 1
@@ -366,12 +390,11 @@ nnoremap <S-F5> :VimwikiAll2HTML<CR>
 nnoremap <leader>wtt :VimwikiTable
 
 "window manager
-nnoremap <F7> :WMToggle<CR>
 let g:AutoOpenWinManager = 1
 let g:NERDTree_title="[NERD Tree]" 
 let g:winManagerWindowLayout='NERDTree|TagList,BufExplorer'
 function! NERDTree_Start()
-	exec 'NERDTree'
+    exec 'NERDTree'
 endfunction
 
 "NERDTree
@@ -379,10 +402,10 @@ let NERDTreeShowBookmarks=1
 let NERDTreeWinSize=24
 
 function! NERDTree_IsValid()
-	return 1
+    return 1
 endfunction
 "SuperTab
-let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabNoCompleteAfter = [',',';','\s']
 "fenceView
 let g:fencview_autodetect = 1
 
