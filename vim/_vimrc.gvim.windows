@@ -72,26 +72,17 @@ function! ToggleMenuBar()
     endif
 endfunc
 
-function! TagListZoom()
-    if &filetype == 'taglist'
-        :res -11
+function! TagbarZoom()
+    if &filetype == 'nerdtree'
+        return
+    endif
+    if &filetype == 'tagbar'
         normal x
-        if &number == 1 || &relativenumber == 1
-            call NoNumber()
-        endif
-        :wincmd p
+        wincmd p
     else
-        if &modified == 1
-            :update
-            :TlistUpdate
-        endif
         :wincmd b
-        if &filetype == 'taglist'
-            :res
+        if &filetype == 'tagbar'
             normal x
-            if &number == 1 || &relativenumber == 1
-                call NoNumber()
-            endif
         else
             :wincmd p
         endif
@@ -99,13 +90,20 @@ function! TagListZoom()
 endfunc
 
 function! NERDTreeZoom()
+    if &filetype == 'tagbar'
+        return
+    endif
     if &filetype == 'nerdtree'
-        :res 12
         normal A
+        :vertical resize 24
+        :q
+        :wincmd b
+        if &filetype == 'tagbar'
+            :vertical resize 24
+        endif
         :wincmd p
     else
         :silent! NERDTreeFind
-        :res
         normal A
     endif
 endfunc
@@ -171,7 +169,8 @@ nnoremap <F3> :call Astyle()<CR>
 nnoremap <F4> :call Compile()<CR>
 nnoremap <F5> :call Run()<CR>
 nnoremap <F6> :call Debug()<CR>
-nnoremap <F7> :WMToggle<CR>
+nnoremap <F7> :NERDTreeToggle<CR>
+nnoremap <F8> :TagbarToggle<CR>
 nnoremap <F10> :Grep<CR>
 
 
@@ -201,6 +200,7 @@ nnoremap <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zM')<CR>
 au Bufwrite,FileReadPre *.cpp,*.c,*.java,*.py  call FormatIndent()
 "local cd dir
 au BufEnter * lcd %:p:h
+au VimEnter * :TagbarToggle
 
 "numbers
 set number
@@ -355,7 +355,7 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 "split window
 nnoremap <leader>s :vsp 
-nnoremap <A-z> :call TagListZoom()<CR>
+nnoremap <A-z> :call TagbarZoom()<CR>
 nnoremap <C-z> :call NERDTreeZoom()<CR>
 "resize width
 nnoremap <leader>[ <C-w>12<
@@ -409,16 +409,6 @@ nnoremap <leader>bb :call CdBaseDir()<CR>
 
 "plug-in  setting
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"TagList option
-let Tlist_Use_Right_Window = 1
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_Show_One_File = 1
-let Tlist_Ctags_Cmd = 'ctags'
-let Tlist_Compart_Format = 1
-let Tlist_File_Fold_Auto_Close = 0
-let Tlist_Enable_Fold_Column = 0
-let Tlist_WinWidth = 24
-
 "pydiction
 let g:pydiction_location = '$VIMRUNTIME\ftplugin\pydiction\complete-dict'
 "cscope
@@ -436,13 +426,6 @@ nnoremap <S-F4> :Vimwiki2HTML<CR>
 nnoremap <S-F5> :VimwikiAll2HTML<CR>
 nnoremap <leader>wtt :VimwikiTable
 
-"window manager
-let g:AutoOpenWinManager = 1
-let g:NERDTree_title="[NERD Tree]" 
-let g:winManagerWindowLayout='NERDTree|TagList,BufExplorer'
-function! NERDTree_Start()
-    exec 'NERDTree'
-endfunction
 
 "NERDTree
 let NERDTreeShowBookmarks = 1
@@ -450,9 +433,13 @@ let NERDTreeWinSize = 24
 let NERDTreeChDirMode = 2
 let NERDTreeAutoCenter = 1
 let NERDTreeAutoCenterThreshold = 5
-function! NERDTree_IsValid()
-    return 1
-endfunction
+
+"Tagbar
+let g:tagbar_width = 24
+let g:tagbar_indent = 1
+let g:tagbar_autoshowtag = 1
+let g:tagbar_iconchars = ['+', '-']  
+
 "SuperTab
 let g:SuperTabNoCompleteAfter = [',',';','\s']
 "fenceView

@@ -4,3 +4,4 @@ mark.vba: call delete('E:\Vim\vimfiles/autoload/mark.vim')|call delete('E:\Vim\v
 visincr.vba: call delete('E:\Vim\vimfiles/plugin/visincrPlugin.vim')|call delete('E:\Vim\vimfiles/autoload/visincr.vim')|call delete('E:\Vim\vimfiles/doc/visincr.txt')
 DrawIt.vba: call delete('E:\Vim\vimfiles/plugin/DrawItPlugin.vim')|call delete('E:\Vim\vimfiles/plugin/cecutil.vim')|call delete('E:\Vim\vimfiles/autoload/DrawIt.vim')|call delete('E:\Vim\vimfiles/doc/DrawIt.txt')
 supertab.vmb: call delete('E:\Vim\vimfiles/doc/supertab.txt')|call delete('E:\Vim\vimfiles/plugin/supertab.vim')
+winmanager.vmb: call delete('D:\Paroid\Vim\vimfiles/doc/winmanager.txt')|call delete('D:\Paroid\Vim\vimfiles/plugin/winfileexplorer.vim')|call delete('D:\Paroid\Vim\vimfiles/plugin/winmanager.vim')|call delete('D:\Paroid\Vim\vimfiles/plugin/wintagexplorer.vim')

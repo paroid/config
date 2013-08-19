@@ -976,13 +976,11 @@ endfunction
 "FUNCTION: s:activateFileNode() {{{2
 "handle the user activating a tree node
 function! s:activateFileNode(node)
-    "fix by paroid"
-    if b:NERDTreeZoomed == 1
-        :res 12
-        call s:toggleZoom()
-    endif
-    "fix end"
     call a:node.activate({'reuse': 1, 'where': 'p'})
+    "fix by paroid"
+    :wincmd t
+    call NERDTreeZoom()
+    "fix end"
 endfunction
 
 "FUNCTION: s:activateBookmark() {{{2
