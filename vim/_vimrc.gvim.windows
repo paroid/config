@@ -80,9 +80,13 @@ function! TagbarZoom()
         normal x
         wincmd p
     else
+        if bufwinnr('__Tagbar__') == -1
+            :TagbarOpen
+        endif
         :wincmd b
         if &filetype == 'tagbar'
             normal x
+            call NoNumber()
         else
             :wincmd p
         endif
@@ -200,7 +204,7 @@ nnoremap <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zM')<CR>
 au Bufwrite,FileReadPre *.cpp,*.c,*.java,*.py  call FormatIndent()
 "local cd dir
 au BufEnter * lcd %:p:h
-au VimEnter * :TagbarToggle
+"au VimEnter * :TagbarToggle
 
 "numbers
 set number
@@ -250,7 +254,7 @@ set nobackup
 set ruler
 set scrolloff=3
 set nojoinspaces
-set updatetime=500
+set updatetime=200
 set backspace=eol,start,indent
 set report=0
 set noerrorbells
