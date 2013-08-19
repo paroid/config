@@ -11,11 +11,15 @@ filetype plugin on
 filetype indent on
 syntax on
 let mapleader=','
-
+let g:baseDir = 'D:\Paroid\Project'
 "some custom vim function
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"base Directory
+function! CdBaseDir()
+    exe "cd ".g:baseDir
+endfunc
 "Astyle : format code, need Astyle.exe
-func Astyle()
+function! Astyle()
     if &filetype == 'c' || &filetype == 'cpp' || &filetype == 'java'
         :update
         exec "!Astyle -A2 -p -xd -S -n -y --indent=spaces %"
@@ -24,7 +28,7 @@ func Astyle()
 endfunc
 "some compiler cmd
 "need gcc/g++/java/python
-func Compile()
+function! Compile()
     :update
     if &filetype == 'c'
         exec "!gcc -Wl,-enable-auto-import % -g -o %<.exe"
@@ -38,7 +42,7 @@ func Compile()
 endfunc
 
 "Run
-func Run()
+function! Run()
     if &filetype == 'c' || &filetype == 'cpp'
         exec "!%<.exe"
     elseif &filetype == 'java' 
@@ -47,7 +51,7 @@ func Run()
 endfunc
 
 "Debug
-func Debug()
+function! Debug()
     if &filetype == 'c'
         exec "!gdb %<.exe"
     elseif &filetype == 'cpp'
@@ -67,6 +71,39 @@ function! ToggleMenuBar()
         set guioptions+=m
     endif
 endfunc
+
+function! TagListZoom()
+    if &filetype == 'taglist'
+        :res -11
+        normal x
+        :wincmd p
+    else
+        if &modified == 1
+            :update
+            :TlistUpdate
+        endif
+        :wincmd b
+        if &filetype == 'taglist'
+            :res
+            normal x
+        else
+            :wincmd p
+        endif
+    endif
+endfunc
+
+function! NERDTreeZoom()
+    if &filetype == 'nerdtree'
+        :res 12
+        normal A
+        :wincmd p
+    else
+        :silent! NERDTreeFind
+        :res
+        normal A
+    endif
+endfunc
+
 
 function! NumberToggle()
     if(&relativenumber == 1)
@@ -98,7 +135,7 @@ function! NoNumber()
     endif
 endfunc
 
-function HasFoldedLine()
+function! HasFoldedLine()
     let lnum = 1
     while lnum <= line("$")
         if foldclosed(lnum) != -1
@@ -157,6 +194,8 @@ nnoremap <silent> <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 nnoremap <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zM')<CR>
 "auto indent
 au Bufwrite,FileReadPre *.cpp,*.c,*.java,*.py  call FormatIndent()
+"local cd dir
+au BufEnter * lcd %:p:h
 
 "numbers
 set number
@@ -168,12 +207,14 @@ au InsertLeave * call SetRelativeNumber()
 "no number for plug-in
 au FileType taglist call NoNumber()
 au FileType nerdtree call NoNumber()
+"map <C-[> to <C-o> in help file"
+au FileType help :nnoremap <buffer> <C-[> <C-o>
+au FileType help :nnoremap <buffer> q :q<CR>
 
 au BufReadPost * call RestoreCursorPos()
 "ctags
 set tags=tags
 set tags+=$VIM\stl_tags
-nnoremap <leader>tt :TlistUpdate<CR>
 set history=200
 "Dir setting
 set autochdir
@@ -225,7 +266,7 @@ if has("gui_running")
     au InsertEnter * se cul
 endif
 
-function ShortTabLabel ()
+function! ShortTabLabel ()
     let bufnrlist = tabpagebuflist (v:lnum)
     let label = bufname (bufnrlist[tabpagewinnr (v:lnum) -1])
     let filename = fnamemodify (label, ':t')
@@ -254,8 +295,8 @@ hi User6 guifg=#e0e0e0 guibg=#040404
 hi User7 guifg=#d0d0d0 guibg=#313131
 
 set statusline =
-set statusline +=%1*[%n]%<\ 
-set statusline +=%6*\ %f\ 
+set statusline +=%1*[%n]\ 
+set statusline +=%6*\ %f\ %<
 set statusline +=%2*%y%m%r
 set statusline +=%6*\ %{&ff}\ \|\ %{(&fenc==\"\"?&enc:&fenc)}\ 
 set statusline +=%7*%=%{strftime('%H:%M')}\ 
@@ -283,7 +324,7 @@ inoremap <C-S>	<C-O>:update<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>l :marks<CR>
 nnoremap <leader>. :call NumberToggle()<CR>
-nnoremap <leader>r :MRU<CR>
+nnoremap R :MRU<CR>
 nnoremap <leader>c :Calendar<CR>
 nnoremap <leader>z :call FormatIndent()<CR>
 "hex edit
@@ -309,6 +350,8 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 "split window
 nnoremap <leader>s :vsp 
+nnoremap Z :call TagListZoom()<CR>
+nnoremap <C-z> :call NERDTreeZoom()<CR>
 "resize width
 nnoremap <leader>[ <C-w>12<
 nnoremap <leader>] <C-w>12>
@@ -358,8 +401,7 @@ noremap <C-c> "+y
 "filename completion
 inoremap <A-f> <C-x><C-f>
 "work base dir
-nnoremap <leader>bb :cd D:\A-Project\CC\Vim<CR>
-cd D:\A-Project\CC\Vim
+nnoremap <leader>bb :call CdBaseDir()<CR>
 
 "plug-in  setting
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -371,6 +413,7 @@ let Tlist_Ctags_Cmd = 'ctags'
 let Tlist_Compart_Format = 1
 let Tlist_File_Fold_Auto_Close = 0
 let Tlist_Enable_Fold_Column = 0
+let Tlist_WinWidth = 24
 
 "pydiction
 let g:pydiction_location = '$VIMRUNTIME\ftplugin\pydiction\complete-dict'
@@ -398,8 +441,10 @@ function! NERDTree_Start()
 endfunction
 
 "NERDTree
-let NERDTreeShowBookmarks=1
-let NERDTreeWinSize=24
+let NERDTreeShowBookmarks = 1
+let NERDTreeWinSize = 24
+let NERDTreeChDirMode = 2
+let NERDTreeAutoCenter = 1
 
 function! NERDTree_IsValid()
     return 1
