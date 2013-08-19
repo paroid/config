@@ -1594,7 +1594,7 @@ function! s:Tlist_Window_Init()
     "space remap"
     "nnoremap <buffer> <silent> <Space> :call <SID>Tlist_Window_Show_Info()<CR>
     nnoremap <buffer> <silent> <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
-    nnoremap <buffer> <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zMggzjzo')<CR>
+    nnoremap <buffer> <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zMzo')<CR>
     "quick fold map end"
     nnoremap <buffer> <silent> u :call <SID>Tlist_Window_Update_File()<CR>
     nnoremap <buffer> <silent> d :call <SID>Tlist_Remove_File(-1, 1)<CR>

@@ -76,6 +76,9 @@ function! TagListZoom()
     if &filetype == 'taglist'
         :res -11
         normal x
+        if &number == 1 || &relativenumber == 1
+            call NoNumber()
+        endif
         :wincmd p
     else
         if &modified == 1
@@ -86,6 +89,9 @@ function! TagListZoom()
         if &filetype == 'taglist'
             :res
             normal x
+            if &number == 1 || &relativenumber == 1
+                call NoNumber()
+            endif
         else
             :wincmd p
         endif
@@ -154,8 +160,7 @@ function! RestoreCursorPos()
 endfunc
 
 function! FormatIndent()
-    :normal gg=G
-    ;normal ''
+    :normal m`gg=G``
 endfunc
 
 "map function with short key
@@ -205,8 +210,8 @@ au FocusGained * call SetRelativeNumber()
 au InsertEnter * call SetNumber()
 au InsertLeave * call SetRelativeNumber()
 "no number for plug-in
-au FileType taglist call NoNumber()
-au FileType nerdtree call NoNumber()
+au FileType taglist call NoNumber() | setl nospell
+au FileType nerdtree call NoNumber()| setl nospell
 "map <C-[> to <C-o> in help file"
 au FileType help :nnoremap <buffer> <C-[> <C-o>
 au FileType help :nnoremap <buffer> q :q<CR>
@@ -350,7 +355,7 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 "split window
 nnoremap <leader>s :vsp 
-nnoremap Z :call TagListZoom()<CR>
+nnoremap <A-z> :call TagListZoom()<CR>
 nnoremap <C-z> :call NERDTreeZoom()<CR>
 "resize width
 nnoremap <leader>[ <C-w>12<
@@ -394,8 +399,7 @@ onoremap <C-A> <C-C>gggH<C-O>G
 snoremap <C-A> <C-C>gggH<C-O>G
 xnoremap <C-A> <C-C>ggVG
 "system clipboard paste
-inoremap <C-q> <esc>"+pa
-nnoremap <C-q> "+p
+noremap <C-q> "+gP
 "copy to system clipboard
 noremap <C-c> "+y
 "filename completion
@@ -445,7 +449,7 @@ let NERDTreeShowBookmarks = 1
 let NERDTreeWinSize = 24
 let NERDTreeChDirMode = 2
 let NERDTreeAutoCenter = 1
-
+let NERDTreeAutoCenterThreshold = 5
 function! NERDTree_IsValid()
     return 1
 endfunction
