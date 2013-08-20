@@ -311,9 +311,9 @@ set guitablabel=%{ShortTabLabel()}
 hi CurrentLine guibg=#424242
 hi CursorLine guibg=#424242
 set cursorline
-au InsertEnter * set cursorline | hi CursorLine guibg=#122428
+au InsertEnter * set cursorline | hi CursorLine guibg=#283638
 au InsertLeave * set cursorline | hi CursorLine guibg=#424242
-au InsertEnter * hi CurrentLine guibg=#122428
+au InsertEnter * hi CurrentLine guibg=#283638
 au InsertLeave * hi CurrentLine guibg=#424242
 au InsertEnter * hi User7 guifg=#070707 guibg=#a3bd29
 au InsertLeave * hi User7 guifg=#d0d0d0 guibg=#313131
@@ -442,8 +442,6 @@ nnoremap <leader>bb :call CdBaseDir()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "pydiction
 let g:pydiction_location = '$VIMRUNTIME\ftplugin\pydiction\complete-dict'
-"cscope
-"cs a $VIM\cscope.out
 "css color
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 "VimWiki
@@ -479,3 +477,5 @@ let g:SuperTabNoCompleteAfter = [',',';','\s']
 "fenceView
 let g:fencview_autodetect = 1
 
+"snipMate"
+let g:snips_author = 'paroid'
