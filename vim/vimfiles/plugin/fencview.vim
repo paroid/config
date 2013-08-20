@@ -764,6 +764,9 @@ function! s:ToggleFencView() "{{{1
     setlocal nospell
     setlocal nonumber
     setlocal cursorline
+    "modified by paroid"
+    nnoremap <buffer> q :q<CR>
+    "modification end
     call append(0,s:Fenc8bit)
     call append(0,s:Fenc16bit)
     call append(0,s:FencUnicode)

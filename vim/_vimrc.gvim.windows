@@ -122,15 +122,19 @@ function! NumberToggle()
     endif
 endfunc
 
+function! FileTypeCheck()
+    return &filetype != 'tagbar' && &filetype != 'nerdtree' && &filetype != 'mru' && &filetype != 'calendar'
+endfunc
+
 function! SetNumber()
-    if &filetype != 'tagbar' && &filetype != 'nerdtree' && &filetype != 'mru'
+    if FileTypeCheck()
         setl norelativenumber
         setl number
     endif
 endfunc
 
 function! SetRelativeNumber()
-    if &filetype != 'tagbar' && &filetype != 'nerdtree' && &filetype != 'mru'
+    if FileTypeCheck()
         :setl relativenumber
     endif
 endfunc
@@ -306,8 +310,9 @@ set guitablabel=%{ShortTabLabel()}
 "status line
 hi CurrentLine guibg=#424242
 hi CursorLine guibg=#424242
-au InsertEnter * hi CursorLine guibg=#122428
-au InsertLeave * hi CursorLine guibg=#424242
+set cursorline
+au InsertEnter * set cursorline | hi CursorLine guibg=#122428
+au InsertLeave * set cursorline | hi CursorLine guibg=#424242
 au InsertEnter * hi CurrentLine guibg=#122428
 au InsertLeave * hi CurrentLine guibg=#424242
 au InsertEnter * hi User7 guifg=#070707 guibg=#a3bd29
@@ -342,7 +347,7 @@ inoremap jk <ESC>
 nnoremap ; :
 vnoremap ; :
 snoremap ; :
-nnoremap <leader>/ :noh<CR>
+nnoremap <leader><space> :noh<CR>
 nnoremap <leader>W :update !sudo tee %<CR>
 nnoremap <leader>w :update<CR>
 noremap <C-S>	:update<CR>
@@ -354,9 +359,11 @@ nnoremap <leader>. :call NumberToggle()<CR>
 nnoremap R :silent! MRU<CR>
 nnoremap <leader>c :Calendar<CR>
 nnoremap <leader>z :call FormatIndent()<CR>
+inoremap <C-Tab> <Tab>
 "hex edit
 nnoremap <leader>h :%!xxd<CR>
 nnoremap <leader>H :%!xxd -r<CR>
+nnoremap <leader>fv :FencView<CR>
 "wrap & no warp
 nnoremap <leader>wr :set wrap<CR>
 nnoremap <leader>wR :set nowrap<CR>
@@ -422,7 +429,8 @@ onoremap <C-A> <C-C>gggH<C-O>G
 snoremap <C-A> <C-C>gggH<C-O>G
 xnoremap <C-A> <C-C>ggVG
 "system clipboard paste
-noremap <C-q> "+gP
+nnoremap <C-q> "+gP
+inoremap <C-q> <ESC>"+gPa
 "copy to system clipboard
 noremap <C-c> "+y
 "filename completion
@@ -435,7 +443,7 @@ nnoremap <leader>bb :call CdBaseDir()<CR>
 "pydiction
 let g:pydiction_location = '$VIMRUNTIME\ftplugin\pydiction\complete-dict'
 "cscope
-cs a $VIM\cscope.out
+"cs a $VIM\cscope.out
 "css color
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 "VimWiki
@@ -464,6 +472,8 @@ let g:tagbar_autoshowtag = 1
 let g:tagbar_iconchars = ['+', '-']  
 let g:tagbar_sort = 0
 
+"ACP"
+let g:acp_behaviorSnipmateLength = 1
 "SuperTab
 let g:SuperTabNoCompleteAfter = [',',';','\s']
 "fenceView

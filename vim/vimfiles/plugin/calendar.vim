@@ -1039,6 +1039,10 @@ function! Calendar(...)
     setlocal norightleft
     setlocal modifiable
     setlocal nolist
+    "modified by paroid"
+    setlocal nospell
+    setlocal nonumber
+    "modification end
     let b:Calendar='Calendar'
     setlocal filetype=calendar
     " is this a vertical (0) or a horizontal (1) split?

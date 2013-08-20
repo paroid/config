@@ -8,11 +8,4 @@
 <body>
 %content%
 </body>
-<div id="footer">
-<hr />
-<hr />
-<p>
-<span id="copy"><strong>© paroid™ @ 2011</strong></span>
-<hr />
-</div>
 </html>

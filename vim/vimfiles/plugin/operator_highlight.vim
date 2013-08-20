@@ -53,6 +53,7 @@ call s:IgnoreFiletypeIfNotSet('notes')
 call s:IgnoreFiletypeIfNotSet('jinja')
 call s:IgnoreFiletypeIfNotSet('tagbar')
 call s:IgnoreFiletypeIfNotSet('nerdtree')
+call s:IgnoreFiletypeIfNotSet('vimwiki')
 
 fun! s:HighlightOperators()
   if get( g:ophigh_filetypes_to_ignore, &filetype, 0 )
