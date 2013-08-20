@@ -103,7 +103,7 @@ endif
 call s:initVariable("g:NERDTreeMapActivateNode", "o")
 call s:initVariable("g:NERDTreeMapChangeRoot", "C")
 call s:initVariable("g:NERDTreeMapChdir", "cd")
-call s:initVariable("g:NERDTreeMapCloseChildren", "X")
+call s:initVariable("g:NERDTreeMapCloseChildren", "<A-x>")
 call s:initVariable("g:NERDTreeMapCloseDir", "x")
 call s:initVariable("g:NERDTreeMapDeleteBookmark", "D")
 call s:initVariable("g:NERDTreeMapMenu", "m")

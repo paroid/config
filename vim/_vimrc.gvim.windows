@@ -72,9 +72,49 @@ function! ToggleMenuBar()
     endif
 endfunc
 
+function! ErrorSign()
+    let errSign = SyntasticStatuslineFlag()
+    let errSign = matchstr(errSign,"(\\d\*)")
+    if errSign != ""
+        let errSign = " ".errSign." "
+    endif
+    return errSign
+endfunc
+
+function! ListToggle()
+    if &buftype != 'quickfix'
+        :Errors
+        :lopen
+    else
+        :lclose
+    endif
+endfunc
+
+function! WindowVerticalZoom()
+    if b:winVerticalZoomed == 1
+        exe "res ".b:winHeight
+        let b:winVerticalZoomed = 0
+    else
+        let b:winHeight = winheight(0)
+        :res 
+        let b:winVerticalZoomed = 1
+    endif
+endfunc
+"horizontal
+function! WindowHorizontalZoom()
+    if b:winHorizontalZoomed == 1
+        exe "vertical res ".b:winWidth
+        let b:winHorizontalZoomed = 0
+    else
+        let b:winWidth = winwidth(0)
+        :vertical res 
+        let b:winHorizontalZoomed = 1
+    endif
+endfunc
+
 function! TagbarZoom()
     if &filetype == 'nerdtree'
-        return
+        call NERDTreeZoom()
     endif
     if &filetype == 'tagbar'
         normal x
@@ -95,7 +135,7 @@ endfunc
 
 function! NERDTreeZoom()
     if &filetype == 'tagbar'
-        return
+        call TagbarZoom()
     endif
     if &filetype == 'nerdtree'
         normal A
@@ -219,7 +259,7 @@ nnoremap <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zM')<CR>
 "auto indent
 au Bufwrite,FileReadPre *.cpp,*.c,*.java,*.py  call FormatIndent()
 "local cd dir
-au BufEnter * lcd %:p:h
+au BufEnter * lcd %:p:h | let b:winVerticalZoomed = 0 | let b:winHorizontalZoomed = 0
 "au VimEnter * :TagbarToggle
 
 "numbers
@@ -325,6 +365,8 @@ hi User4 guifg=#fd971f guibg=#040404
 hi User5 guifg=#eeee40 guibg=#313131 
 hi User6 guifg=#e0e0e0 guibg=#040404 
 hi User7 guifg=#d0d0d0 guibg=#313131
+hi User8 guifg=#f92672 guibg=#040404
+
 
 set statusline =
 set statusline +=%1*[%n]\ 
@@ -332,6 +374,7 @@ set statusline +=%6*\ %f\ %<
 set statusline +=%2*%y%m
 set statusline +=%6*\ %{&ff}\ \|\ %{(&fenc==\"\"?&enc:&fenc)}\ 
 set statusline +=%7*%=%{strftime('%H:%M')}\ 
+set statusline +=%8*%{ErrorSign()}
 set statusline +=%3*\ [
 set statusline +=%1*%b
 set statusline +=%5*\ 0x%B
@@ -354,11 +397,13 @@ noremap <C-S>	:update<CR>
 vnoremap <C-S>	<C-C>:update<CR>
 inoremap <C-S>	<C-O>:update<CR>
 nnoremap <leader>q :q<CR>
-nnoremap <leader>l :marks<CR>
+nnoremap <leader>l :call ListToggle()<CR>
 nnoremap <leader>. :call NumberToggle()<CR>
 nnoremap R :silent! MRU<CR>
 nnoremap <leader>c :Calendar<CR>
-nnoremap <leader>z :call FormatIndent()<CR>
+nnoremap <leader>i :call FormatIndent()<CR>
+nnoremap <leader>z :call WindowVerticalZoom()<CR>
+nnoremap <leader>Z :call WindowHorizontalZoom()<CR>
 inoremap <C-Tab> <Tab>
 "hex edit
 nnoremap <leader>h :%!xxd<CR>
@@ -370,12 +415,7 @@ nnoremap <leader>wR :set nowrap<CR>
 "quick load _vimrc
 nnoremap <leader>e :e $VIM\_vimrc <CR>
 "Auto Complete Bracket
-inoremap ( ()<ESC>i
 inoremap {{ {}<ESC>i<CR><CR><ESC>kS
-inoremap {} {}<ESC>i
-inoremap [ []<ESC>i
-inoremap '' ''<ESC>i
-inoremap " ""<ESC>i
 "remove the only join space
 nnoremap J Jx
 "Window switch 
@@ -472,10 +512,18 @@ let g:tagbar_sort = 0
 
 "ACP"
 let g:acp_behaviorSnipmateLength = 1
+let g:acp_completeOption = '.,w,b,k,t'
+let g:acp_behaviorKeywordCommand = "\<C-n>"
 "SuperTab
 let g:SuperTabNoCompleteAfter = [',',';','\s']
+let g:SuperTabDefaultCompletionType = "\<C-n>"
 "fenceView
 let g:fencview_autodetect = 1
 
+"autoclose
+let g:AutoClosePairs = "() {} [] \""
+let g:AutoCloseProtectedRegions = []
+"Syntastic 
+let g:syntastic_auto_loc_list = 0
 "snipMate"
 let g:snips_author = 'paroid'
