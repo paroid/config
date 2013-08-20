@@ -115,31 +115,31 @@ endfunc
 
 function! NumberToggle()
     if(&relativenumber == 1)
-        set norelativenumber
-        set number
+        setl norelativenumber
+        setl number
     else
-        set relativenumber
+        setl relativenumber
     endif
 endfunc
 
 function! SetNumber()
-    if &filetype != 'taglist' && &filetype != 'nerdtree'
-        set norelativenumber
-        set number
+    if &filetype != 'tagbar' && &filetype != 'nerdtree' && &filetype != 'mru'
+        setl norelativenumber
+        setl number
     endif
 endfunc
 
 function! SetRelativeNumber()
-    if &filetype != 'taglist' && &filetype != 'nerdtree'
-        :set relativenumber
+    if &filetype != 'tagbar' && &filetype != 'nerdtree' && &filetype != 'mru'
+        :setl relativenumber
     endif
 endfunc
 
 function! NoNumber()
     if &nu == 1
-        set nonumber
+        setl nonumber
     elseif &rnu == 1
-        set norelativenumber
+        setl norelativenumber
     endif
 endfunc
 
@@ -165,6 +165,18 @@ function! FormatIndent()
     :normal m`gg=G``
 endfunc
 
+function! QuickSelectMap()
+    nmap <buffer> 1 1G<CR>
+    nmap <buffer> 2 2G<CR>
+    nmap <buffer> 3 3G<CR>
+    nmap <buffer> 4 4G<CR>
+    nmap <buffer> 5 5G<CR>
+    nmap <buffer> 6 6G<CR>
+    nmap <buffer> 7 7G<CR>
+    nmap <buffer> 8 8G<CR>
+    nmap <buffer> 9 9G<CR>
+    nmap <buffer> 0 10G<CR>
+endfunc
 "map function with short key
 nnoremap <F1> :h 
 inoremap <F1> <ESC>:h 
@@ -214,11 +226,14 @@ au FocusGained * call SetRelativeNumber()
 au InsertEnter * call SetNumber()
 au InsertLeave * call SetRelativeNumber()
 "no number for plug-in
-au FileType taglist call NoNumber() | setl nospell
+au FileType tagbar call NoNumber() | setl nospell
 au FileType nerdtree call NoNumber()| setl nospell
 "map <C-[> to <C-o> in help file"
 au FileType help :nnoremap <buffer> <C-[> <C-o>
 au FileType help :nnoremap <buffer> q :q<CR>
+au FileType help call SetNumber()
+"MRU quick select"
+au FileType mru call QuickSelectMap()
 
 au BufReadPost * call RestoreCursorPos()
 "ctags
@@ -240,8 +255,9 @@ set incsearch
 set hlsearch
 set confirm
 "color scheme & font
-set t_Co=256
+"set t_Co=256
 colorscheme molokai
+let g:ophigh_color = "#b9c798"
 set guifont=consolas:h11,YaHei
 "window size
 set columns=108
@@ -262,6 +278,9 @@ set noerrorbells
 "tab setting
 set tabpagemax=12
 if has("gui_running")
+    source $VIMRUNTIME/delmenu.vim
+    set langmenu=en_us.utf-8
+    source $VIMRUNTIME/menu.vim
     let mapleader = ','
     nmap <leader>tn :tabnew<CR>
     nmap <leader>tc :tabclose<CR>
@@ -291,7 +310,6 @@ au InsertEnter * hi CursorLine guibg=#122428
 au InsertLeave * hi CursorLine guibg=#424242
 au InsertEnter * hi CurrentLine guibg=#122428
 au InsertLeave * hi CurrentLine guibg=#424242
-"au! Cursorhold * exe 'match CurrentLine /\%' . line('.') . 'l.*/'
 au InsertEnter * hi User7 guifg=#070707 guibg=#a3bd29
 au InsertLeave * hi User7 guifg=#d0d0d0 guibg=#313131
 "colors
@@ -306,7 +324,7 @@ hi User7 guifg=#d0d0d0 guibg=#313131
 set statusline =
 set statusline +=%1*[%n]\ 
 set statusline +=%6*\ %f\ %<
-set statusline +=%2*%y%m%r
+set statusline +=%2*%y%m
 set statusline +=%6*\ %{&ff}\ \|\ %{(&fenc==\"\"?&enc:&fenc)}\ 
 set statusline +=%7*%=%{strftime('%H:%M')}\ 
 set statusline +=%3*\ [
@@ -333,7 +351,7 @@ inoremap <C-S>	<C-O>:update<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>l :marks<CR>
 nnoremap <leader>. :call NumberToggle()<CR>
-nnoremap R :MRU<CR>
+nnoremap R :silent! MRU<CR>
 nnoremap <leader>c :Calendar<CR>
 nnoremap <leader>z :call FormatIndent()<CR>
 "hex edit
@@ -346,9 +364,10 @@ nnoremap <leader>wR :set nowrap<CR>
 nnoremap <leader>e :e $VIM\_vimrc <CR>
 "Auto Complete Bracket
 inoremap ( ()<ESC>i
-inoremap { {}<ESC>i
+inoremap {{ {}<ESC>i<CR><CR><ESC>kS
+inoremap {} {}<ESC>i
 inoremap [ []<ESC>i
-inoremap ' ''<ESC>i
+inoremap '' ''<ESC>i
 inoremap " ""<ESC>i
 "remove the only join space
 nnoremap J Jx
@@ -359,8 +378,8 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 "split window
 nnoremap <leader>s :vsp 
-nnoremap <A-z> :call TagbarZoom()<CR>
-nnoremap <C-z> :call NERDTreeZoom()<CR>
+nnoremap X :call TagbarZoom()<CR>
+nnoremap Z :call NERDTreeZoom()<CR>
 "resize width
 nnoremap <leader>[ <C-w>12<
 nnoremap <leader>] <C-w>12>
@@ -443,6 +462,7 @@ let g:tagbar_width = 24
 let g:tagbar_indent = 1
 let g:tagbar_autoshowtag = 1
 let g:tagbar_iconchars = ['+', '-']  
+let g:tagbar_sort = 0
 
 "SuperTab
 let g:SuperTabNoCompleteAfter = [',',';','\s']

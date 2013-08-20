@@ -925,6 +925,11 @@ function! s:MapKeys() abort
     "nnoremap <script> <silent> <buffer> <Space> :call <SID>ShowPrototype(0)<CR>
     nmap <buffer> <silent> <space> :call <SID>ToggleFold()<CR>
     nmap <buffer> <silent> <S-space> :call <SID>SetFoldLevel(0, 2)<CR>
+    nnoremap <script> <silent> <buffer> }
+                                        \ :call <SID>GotoNextToplevelTag(1)<CR>
+    nnoremap <script> <silent> <buffer> {
+                                        \ :call <SID>GotoNextToplevelTag(-1)<CR>
+    "modification end"
 
     nnoremap <script> <silent> <buffer> +        :call <SID>OpenFold()<CR>
     nnoremap <script> <silent> <buffer> <kPlus>  :call <SID>OpenFold()<CR>
@@ -962,6 +967,7 @@ function! s:CreateAutocommands() abort
         autocmd BufEnter   __Tagbar__ nested call s:QuitIfOnlyWindow()
         autocmd CursorHold __Tagbar__ call s:ShowPrototype(1)
 
+        "modified by paroid disable auto update
         autocmd BufReadPost,BufWritePost * call
                     \ s:AutoUpdate(fnamemodify(expand('<afile>'), ':p'), 1)
         autocmd BufEnter,CursorHold,FileType * call
@@ -2854,6 +2860,7 @@ function! s:JumpToTag(stay_in_tagbar) abort
     if s:is_maximized == 1
         normal x
     endif
+    "modification end"
     let taginfo = s:GetTagInfo(line('.'), 1)
 
     let autoclose = w:autoclose
@@ -2926,8 +2933,18 @@ function! s:ShowPrototype(short) abort
     if empty(taginfo)
         return ''
     endif
-
-    echo taginfo.getPrototype(a:short)
+    
+    "modified by paroid"
+    let g:protoType = taginfo.getPrototype(a:short)
+    let g:protoType = substitute(g:protoType,"\t"," ","g")
+    let g:filename = ""
+    if !empty(s:known_files.getCurrent())
+        let g:filename = fnamemodify(s:known_files.getCurrent().fpath, ':t')
+    endif
+    let g:tagSorted = get(s:compare_typeinfo, 'sort', g:tagbar_sort)?">":"<"
+    setl statusline =%2*%{g:tagSorted}\ %{g:filename}\ %<%6*\ %{g:protoType}
+    "echo taginfo.getPrototype(a:short)
+    "modification end
 endfunction
 
 " s:ToggleHelp() {{{2
