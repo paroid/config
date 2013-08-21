@@ -603,6 +603,9 @@ endfunction
 function! s:MRU_Select_File_Cmd(opt) range
     let [edit_type, open_type] = split(a:opt, ',')
 
+    "modified by paroid
+    hi CursorLine guibg=#424242
+    "modification end
     let fnames = getline(a:firstline, a:lastline)
 
     if g:MRU_Auto_Close == 1 && g:MRU_Use_Current_Window == 0
@@ -708,6 +711,7 @@ function! s:MRU_Open_Window(...)
             setfiletype mru
             set number
             setl nospell
+            hi CursorLine guibg=#000000
             "modified end"
         endif
     endif
@@ -747,7 +751,10 @@ function! s:MRU_Open_Window(...)
     nnoremap <buffer> <silent> u :MRU<CR>
     nnoremap <buffer> <silent> <2-LeftMouse>
                 \ :call <SID>MRU_Select_File_Cmd('edit,useopen')<CR>
-    nnoremap <buffer> <silent> q :close<CR>
+    "modified by paroid
+    nnoremap <buffer> <silent> q :hi CursorLine guibg=#424242<CR>
+                \:q<CR>
+    "modification end
 
     " Restore the previous cpoptions settings
     let &cpoptions = old_cpoptions

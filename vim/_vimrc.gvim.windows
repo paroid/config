@@ -221,10 +221,16 @@ function! QuickSelectMap()
     nmap <buffer> 9 9G<CR>
     nmap <buffer> 0 10G<CR>
 endfunc
+
+function! EchoHighlightGroup()
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+
+
 "map function with short key
 nnoremap <F1> :h 
 inoremap <F1> <ESC>:h 
-nnoremap <F2> :call ToggleMenuBar()<CR>
+nnoremap <F2> :GundoToggle<CR>
 nnoremap <F3> :call Astyle()<CR>
 nnoremap <F4> :call Compile()<CR>
 nnoremap <F5> :call Run()<CR>
@@ -232,7 +238,8 @@ nnoremap <F6> :call Debug()<CR>
 nnoremap <F7> :NERDTreeToggle<CR>
 nnoremap <F8> :TagbarToggle<CR>
 nnoremap <F10> :Grep<CR>
-
+nnoremap <F11> :call ToggleMenuBar()<CR>
+nnoremap <F12> :call EchoHighlightGroup()<CR>
 
 "General setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -253,18 +260,17 @@ set tabstop=4
 set shiftwidth=4
 set backspace=2
 set nowrap
+set linespace=0
 "Fold Code With Space
 nnoremap <silent> <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 nnoremap <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zM')<CR>
 "auto indent
 au Bufwrite,FileReadPre *.cpp,*.c,*.java,*.py  call FormatIndent()
 "local cd dir
-au BufEnter * lcd %:p:h | let b:winVerticalZoomed = 0 | let b:winHorizontalZoomed = 0
-"au VimEnter * :TagbarToggle
-
-"numbers
-set number
+au BufEnter * lcd %:p:h 
+au BufNew * let b:winVerticalZoomed = 0 | let b:winHorizontalZoomed = 0
 "auto set number"
+set number
 au FocusLost * call SetNumber()
 au FocusGained * call SetRelativeNumber()
 au InsertEnter * call SetNumber()
@@ -272,6 +278,8 @@ au InsertLeave * call SetRelativeNumber()
 "no number for plug-in
 au FileType tagbar call NoNumber() | setl nospell
 au FileType nerdtree call NoNumber()| setl nospell
+au FileType gundo call NoNumber()| setl nospell
+au FileType diff call NoNumber()| setl nospell
 "map <C-[> to <C-o> in help file"
 au FileType help :nnoremap <buffer> <C-[> <C-o>
 au FileType help :nnoremap <buffer> q :q<CR>
@@ -299,10 +307,12 @@ set incsearch
 set hlsearch
 set confirm
 "color scheme & font
-"set t_Co=256
+set background=dark
 colorscheme molokai
 let g:ophigh_color = "#b9c798"
 set guifont=consolas:h11,YaHei
+set mouse=a
+set mousehide
 "window size
 set columns=108
 set lines=28
@@ -313,6 +323,7 @@ set foldlevel=100
 set nobackup
 set ruler
 set scrolloff=3
+"set scrolljump=5
 set nojoinspaces
 set updatetime=200
 set backspace=eol,start,indent
@@ -326,6 +337,7 @@ if has("gui_running")
     set langmenu=en_us.utf-8
     source $VIMRUNTIME/menu.vim
     let mapleader = ','
+    nmap <C-t> :tabnew<CR>
     nmap <leader>tn :tabnew<CR>
     nmap <leader>tc :tabclose<CR>
     "remove gui menubar
@@ -336,6 +348,10 @@ if has("gui_running")
     set guioptions-=L
     au InsertLeave * se nocul
     au InsertEnter * se cul
+else
+    if &term == 'xterm' || &term == 'screen'
+        set t_Co=256
+    endif 
 endif
 
 function! ShortTabLabel ()
@@ -351,8 +367,10 @@ set guitablabel=%{ShortTabLabel()}
 hi CurrentLine guibg=#424242
 hi CursorLine guibg=#424242
 set cursorline
-au InsertEnter * set cursorline | hi CursorLine guibg=#283638
-au InsertLeave * set cursorline | hi CursorLine guibg=#424242
+au WinLeave * set nocursorline
+au WinEnter * set cursorline
+au InsertEnter * hi CursorLine guibg=#283638
+au InsertLeave * hi CursorLine guibg=#424242
 au InsertEnter * hi CurrentLine guibg=#283638
 au InsertLeave * hi CurrentLine guibg=#424242
 au InsertEnter * hi User7 guifg=#070707 guibg=#a3bd29
@@ -365,7 +383,7 @@ hi User4 guifg=#fd971f guibg=#040404
 hi User5 guifg=#eeee40 guibg=#313131 
 hi User6 guifg=#e0e0e0 guibg=#040404 
 hi User7 guifg=#d0d0d0 guibg=#313131
-hi User8 guifg=#f92672 guibg=#040404
+hi User8 guifg=#eeeeee guibg=#ac0317
 
 
 set statusline =
@@ -384,6 +402,8 @@ set statusline +=%6*\/\%L,
 set statusline +=%4*%c%V\ 
 set statusline +=%3*\ %P\ 
 
+"hi SyntasticErrorSign 
+"hi SyntasticWarningSign 
 "short mapping
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 inoremap jk <ESC>
@@ -404,14 +424,43 @@ nnoremap <leader>c :Calendar<CR>
 nnoremap <leader>i :call FormatIndent()<CR>
 nnoremap <leader>z :call WindowVerticalZoom()<CR>
 nnoremap <leader>Z :call WindowHorizontalZoom()<CR>
+"copy to line end
+nnoremap Y y$
+"go to middle of current line
+nnoremap gm :call cursor(0, len(getline('.'))/2)<CR>
+"auto center search item
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+nnoremap <silent> g# g#zz
+"move text
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+" Code folding options
+nmap <leader>f0 :set foldlevel=0<CR>
+nmap <leader>f1 :set foldlevel=1<CR>
+nmap <leader>f2 :set foldlevel=2<CR>
+nmap <leader>f3 :set foldlevel=3<CR>
+nmap <leader>f4 :set foldlevel=4<CR>
+nmap <leader>f5 :set foldlevel=5<CR>
+nmap <leader>f6 :set foldlevel=6<CR>
+nmap <leader>f7 :set foldlevel=7<CR>
+nmap <leader>f8 :set foldlevel=8<CR>
+nmap <leader>f9 :set foldlevel=9<CR>
+"real Tab
 inoremap <C-Tab> <Tab>
 "hex edit
 nnoremap <leader>h :%!xxd<CR>
 nnoremap <leader>H :%!xxd -r<CR>
 nnoremap <leader>fv :FencView<CR>
-"wrap & no warp
-nnoremap <leader>wr :set wrap<CR>
-nnoremap <leader>wR :set nowrap<CR>
+"wrap toggle
+nnoremap <leader>wr :set wrap! wrap?<CR>
 "quick load _vimrc
 nnoremap <leader>e :e $VIM\_vimrc <CR>
 "Auto Complete Bracket
@@ -427,7 +476,8 @@ nnoremap <C-l> <C-w>l
 nnoremap <leader>s :vsp 
 nnoremap X :call TagbarZoom()<CR>
 nnoremap Z :call NERDTreeZoom()<CR>
-"resize width
+"resize window
+nnoremap <Leader>= <C-w>=
 nnoremap <leader>[ <C-w>12<
 nnoremap <leader>] <C-w>12>
 nnoremap <leader>{ <C-w>6-
@@ -435,8 +485,6 @@ nnoremap <leader>} <C-w>6+
 "wrap line up down
 nnoremap j gj
 nnoremap k gk
-nnoremap <A-j> j
-nnoremap <A-k> k
 "disable arrow key
 nnoremap <up> <nop>
 nnoremap <down> <nop>
@@ -527,3 +575,10 @@ let g:AutoCloseProtectedRegions = []
 let g:syntastic_auto_loc_list = 0
 "snipMate"
 let g:snips_author = 'paroid'
+"GUndo
+let g:gundo_width = 24
+let g:gundo_preview_height = 16
+let g:gundo_right = 0
+let g:gundo_preview_bottom = 1
+let g:gundo_help = 0
+
