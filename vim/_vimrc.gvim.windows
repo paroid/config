@@ -349,6 +349,12 @@ au FileType help call SetNumber()
 au FileType mru call QuickSelectMap()
 
 au BufReadPost * call RestoreCursorPos()
+function! NeoCache()
+    :NeoCompleteTagMakeCache
+    :NeoCompleteIncludeMakeCache
+    :NeoCompleteBufferMakeCache
+endfunc
+"au BufNew * :call NeoCache()
 "ctags
 set tags=tags
 set tags+=$VIM\stl_tags
@@ -593,8 +599,6 @@ inoremap <A-f> <C-x><C-f>
 nnoremap <leader>bb :call CdBaseDir()<CR>
 "plug-in  setting
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"pydiction
-let g:pydiction_location = '$VIMRUNTIME\ftplugin\pydiction\complete-dict'
 "css color
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 "VimWiki
@@ -623,10 +627,11 @@ let g:tagbar_autoshowtag = 1
 let g:tagbar_iconchars = ['+', '-']  
 let g:tagbar_sort = 0
 
-"ACP"
-let g:acp_behaviorSnipmateLength = 1
-let g:acp_completeOption = '.,w,b,k,t'
-let g:acp_behaviorKeywordCommand = "\<C-n>"
+"neosnippets
+let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#snippets_directory='$VIM/vimfiles/bundle/neosnippet/snippets'
+imap <C-d> <Plug>(neosnippet_expand_or_jump)
+
 "SuperTab
 let g:SuperTabNoCompleteAfter = [',',';','\s']
 let g:SuperTabDefaultCompletionType = "\<C-n>"
@@ -638,20 +643,19 @@ let g:AutoClosePairs = "() {} [] \""
 let g:AutoCloseProtectedRegions = []
 "Syntastic 
 let g:syntastic_auto_loc_list = 0
-"snipMate"
-let g:snips_author = 'paroid'
 "GUndo
 let g:gundo_width = 24
 let g:gundo_preview_height = 16
 let g:gundo_right = 0
 let g:gundo_preview_bottom = 1
 let g:gundo_help = 0
-"neocomplcache
-"let g:acp_enableAtStartup = 0
-"let g:neocomplcache_enable_at_startup = 1
-"let g:neocomplcache_enable_smart_case = 1
-"let g:neocomplcache_enable_auto_select = 1
-"let g:neocomplcache_min_syntax_length = 3
-"let g:neocomplcache_enable_camel_case_completion = 1
-"let g:neocomplcache_enable_underbar_completion = 1
-
+"neocomplete
+let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#use_vimproc = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_auto_select = 1
+let g:neocomplete#release_cache_time = 300
+let g:neocomplete#force_overwrite_completefunc = 1
+let g:neocomplete#sources#buffer#cache_limit_size = 12097152
+au VimEnter * call neocomplete#initialize()
