@@ -17,8 +17,8 @@ syntax match MRUFilePathMatch '\s\S*'
 highlight default link MRUFileNameMatch MRUFileName
 highlight default link MRUFilePathMatch MRUFilePath
 
-highlight default MRUFileName guifg=#fd971f 
-highlight default MRUFilePath guifg=#414141
+highlight default MRUFileName guifg=#fd971f ctermfg=208
+highlight default MRUFilePath guifg=#414141 ctermfg=238
 
 
 let b:current_syntax = "mru"
