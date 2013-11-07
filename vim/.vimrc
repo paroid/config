@@ -573,14 +573,14 @@ nnoremap <leader>} <C-w>6+
 nnoremap j gj
 nnoremap k gk
 "disable arrow key
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
+"nnoremap <up> <nop>
+"nnoremap <down> <nop>
+"nnoremap <left> <nop>
+"nnoremap <right> <nop>
+"inoremap <up> <nop>
+"inoremap <down> <nop>
+"inoremap <left> <nop>
+"inoremap <right> <nop>
 "insert mode move
 inoremap <C-h> <left>
 inoremap <C-j> <down>
@@ -601,7 +601,7 @@ noremap <C-A> ggvG
 inoremap <C-A> <ESC>ggvG
 "system clipboard paste
 nnoremap <C-q> "+gP
-inoremap <C-q> <ESC>"+gPa
+inoremap <C-q> <ESC>l"+gPa
 "copy to system clipboard
 nnoremap <C-c> "+y
 vnoremap <C-c> "+y
