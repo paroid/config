@@ -597,11 +597,11 @@ nnoremap <leader>dl :g/^$/,/./-j<CR>
 "inc
 noremap <C-i> <C-a>
 "Select all
-noremap <C-A> ggvG
-inoremap <C-A> <ESC>ggvG
+noremap <C-A> ggvG$
+inoremap <C-A> <ESC>ggvG$
 "system clipboard paste
-nnoremap <C-q> "+gP
-inoremap <C-q> <ESC>l"+gPa
+nnoremap <C-q> "+p
+inoremap <C-q> <ESC>l"+pa
 "copy to system clipboard
 nnoremap <C-c> "+y
 vnoremap <C-c> "+y
