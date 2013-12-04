@@ -472,6 +472,9 @@ fun! RestoreUserMaps(suffix)
     "  call Dret("RestoreUserMaps")
 endfun
 
+"unmap short key
+unmap <leader>swp
+
 " ---------------------------------------------------------------------
 "  Restore: {{{1
 let &cpo= s:keepcpo

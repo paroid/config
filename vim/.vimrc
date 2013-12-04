@@ -473,8 +473,8 @@ hi User8 guifg=#eeeeee guibg=#ac0317 ctermfg=255 ctermbg=124
 
 set statusline =
 set statusline +=%1*[%n]\ 
-set statusline +=%6*\ %f\ %<
-set statusline +=%2*%y%m
+set statusline +=%6*\ %f\ 
+set statusline +=%2*%y%m%<
 set statusline +=%6*\ %{&ff}\ \|\ %{(&fenc==\"\"?&enc:&fenc)}\ 
 set statusline +=%7*%=%{strftime('%H:%M')}\ 
 set statusline +=%8*%{ErrorSign()}
@@ -504,9 +504,9 @@ snoremap ; :
 nnoremap <leader><space> :noh<CR>
 nnoremap <leader>W :update !sudo tee %<CR>
 nnoremap <leader>w :update<CR>
-noremap <C-S>	:update<CR>
-vnoremap <C-S>	<C-C>:update<CR>
-inoremap <C-S>	<C-O>:update<CR>
+noremap <C-S>	:update<CR>zz
+vnoremap <C-S>	<C-C>:update<CR>zz
+inoremap <C-S>	<C-O>:update<CR>zz
 nnoremap <leader>q :q<CR>
 nnoremap <leader>l :call ListToggle()<CR>
 nnoremap <leader>. :call NumberToggle()<CR>
