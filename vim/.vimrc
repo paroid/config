@@ -506,7 +506,7 @@ nnoremap <leader>W :update !sudo tee %<CR>
 nnoremap <leader>w :update<CR>
 noremap <C-S>	:update<CR>zz
 vnoremap <C-S>	<C-C>:update<CR>zz
-inoremap <C-S>	<C-O>:update<CR>zz
+inoremap <C-S>	<ESC>:update<CR>zza
 nnoremap <leader>q :q<CR>
 nnoremap <leader>l :call ListToggle()<CR>
 nnoremap <leader>. :call NumberToggle()<CR>
@@ -601,7 +601,7 @@ noremap <C-A> ggvG$
 inoremap <C-A> <ESC>ggvG$
 "system clipboard paste
 nnoremap <C-q> "+p
-inoremap <C-q> <ESC>l"+pa
+inoremap <C-q> <ESC>"+pa
 "copy to system clipboard
 nnoremap <C-c> "+y
 vnoremap <C-c> "+y
@@ -659,6 +659,7 @@ let g:AutoClosePairs = "() {} [] \""
 let g:AutoCloseProtectedRegions = []
 "Syntastic 
 let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_wq=0
 "GUndo
 let g:gundo_width = 24
 let g:gundo_preview_height = 16
@@ -675,5 +676,5 @@ if has("win32")
     let g:neocomplete#release_cache_time = 300
     let g:neocomplete#force_overwrite_completefunc = 1
     let g:neocomplete#sources#buffer#cache_limit_size = 12097152
-    au VimEnter * call neocomplete#initialize()
+    au VimEnter * call neocomplete#initialize() | :SyntasticToggleMode<CR>
 endif
