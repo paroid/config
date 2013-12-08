@@ -660,6 +660,7 @@ let g:AutoCloseProtectedRegions = []
 "Syntastic 
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_wq=0
+au VimEnter * :SyntasticToggleMode
 "GUndo
 let g:gundo_width = 24
 let g:gundo_preview_height = 16
@@ -676,5 +677,5 @@ if has("win32")
     let g:neocomplete#release_cache_time = 300
     let g:neocomplete#force_overwrite_completefunc = 1
     let g:neocomplete#sources#buffer#cache_limit_size = 12097152
-    au VimEnter * call neocomplete#initialize() | :SyntasticToggleMode<CR>
+    au VimEnter * call neocomplete#initialize() 
 endif
