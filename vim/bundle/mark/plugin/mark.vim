@@ -391,7 +391,7 @@ function! s:MakeDirectGroupMappings()
 		endfor
 	endfor
 endfunction
-call s:MakeDirectGroupMappings()
+"call s:MakeDirectGroupMappings()
 delfunction s:MakeDirectGroupMappings
 
 
