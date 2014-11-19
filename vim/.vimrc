@@ -16,7 +16,7 @@ let mapleader=','
 "OS  custom settings
 if has("win32")
     let $LANG = 'en_US'
-    set guifont=consolas:h11,YaHei
+    set guifont=Microsoft_YaHei_Mono:h11:cANSI
     let g:baseDir = 'D:\Paroid\Project'
     lang messages en_US,utf-8
     set tags+=$VIM\stl_tags
@@ -31,6 +31,145 @@ elseif has("unix")
     nnoremap <leader>e :e ~/.vimrc <CR>
     let g:vimwiki_list = [{'path': '~/vimwiki','path_html': '~/vimwiki/public_html','auto_export': 0}]
 endif
+"short mapping
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+inoremap jk <ESC>
+nnoremap ; :
+vnoremap ; :
+snoremap ; :
+nnoremap <leader><space> :noh<CR>
+nnoremap <leader>W :update !sudo tee %<CR>
+nnoremap <leader>w :update<CR>
+noremap <C-S>	:update<CR>
+vnoremap <C-S>	<C-C>:update<CR>
+inoremap <C-S>	<C-O>:update<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>l :call ListToggle()<CR>
+nnoremap <leader>. :call NumberToggle()<CR>
+nnoremap R :silent! MRU<CR>
+nnoremap <leader>C :Calendar<CR>
+nnoremap <leader>i :call FormatIndent()<CR>
+nnoremap <leader>z :call WindowVerticalZoom()<CR>
+nnoremap <leader>Z :call WindowHorizontalZoom()<CR>
+"Fold Code With Space
+nnoremap <silent> <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+nnoremap <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zM')<CR>
+
+"map function with short key
+nnoremap <F1> :h 
+inoremap <F1> <ESC>:h 
+nnoremap <F2> :GundoToggle<CR>
+nnoremap <F3> :call Astyle()<CR>
+nnoremap <F4> :call Compile()<CR>
+nnoremap <F5> :call Run()<CR>
+nnoremap <F6> :call Debug()<CR>
+nnoremap <F7> :NERDTreeToggle<CR>
+nnoremap <F8> :TagbarToggle<CR>
+nnoremap <F10> :Grep<CR>
+nnoremap <F11> :call ToggleMenuBar()<CR>
+nnoremap <F12> :call EchoHighlightGroup()<CR>
+
+"copy to line end
+nnoremap Y y$
+"go to middle of current line
+nnoremap gm :call cursor(0, len(getline('.'))/2)<CR>
+"auto center search item
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+nnoremap <silent> g# g#zz
+"move text
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+" Code folding options
+nmap <leader>f0 :set foldlevel=0<CR>
+nmap <leader>f1 :set foldlevel=1<CR>
+nmap <leader>f2 :set foldlevel=2<CR>
+nmap <leader>f3 :set foldlevel=3<CR>
+nmap <leader>f4 :set foldlevel=4<CR>
+nmap <leader>f5 :set foldlevel=5<CR>
+nmap <leader>f6 :set foldlevel=6<CR>
+nmap <leader>f7 :set foldlevel=7<CR>
+nmap <leader>f8 :set foldlevel=8<CR>
+nmap <leader>f9 :set foldlevel=9<CR>
+"real Tab
+inoremap <C-Tab> <Tab>
+"hex edit
+nnoremap <leader>h :%!xxd<CR>
+nnoremap <leader>H :%!xxd -r<CR>
+nnoremap <leader>fv :FencView<CR>
+"wrap toggle
+nnoremap <leader>wr :set wrap! wrap?<CR>
+"Auto Complete Bracket
+inoremap {{ {}<ESC>i<CR><CR><ESC>kS
+"Window switch 
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+"split window
+nnoremap <leader>s :vsp 
+nnoremap X :call TagbarZoom()<CR>
+nnoremap Z :call NERDTreeZoom()<CR>
+"resize window
+nnoremap <Leader>= <C-w>=
+nnoremap <leader>[ <C-w>12<
+nnoremap <leader>] <C-w>12>
+nnoremap <leader>{ <C-w>6-
+nnoremap <leader>} <C-w>6+
+"wrap line up down
+nnoremap j gj
+nnoremap k gk
+"disable arrow key
+"nnoremap <up> <nop>
+"nnoremap <down> <nop>
+"nnoremap <left> <nop>
+"nnoremap <right> <nop>
+"inoremap <up> <nop>
+"inoremap <down> <nop>
+"inoremap <left> <nop>
+"inoremap <right> <nop>
+"insert mode move
+inoremap <C-h> <left>
+inoremap <C-j> <down>
+inoremap <C-k> <up>
+inoremap <C-l> <right>
+inoremap jl <right>
+inoremap jf <left>
+"visual indent
+vnoremap > >gv
+vnoremap < <gv
+"quick delete command
+nnoremap <leader>del :g/^\s*$/d<CR>
+nnoremap <leader>dl :g/^$/,/./-j<CR>
+"inc
+noremap <C-i> <C-a>
+"Select all
+noremap <C-A> ggvG$
+inoremap <C-A> <ESC>ggvG$
+"system clipboard paste
+nnoremap <C-q> "+gP
+inoremap <C-q> <ESC>"+gPa
+"copy to system clipboard
+nnoremap <C-c> "+y
+vnoremap <C-c> "+y
+snoremap <C-c> "+y
+"filename completion
+inoremap <A-f> <C-x><C-f>
+"work base dir
+nnoremap <leader>bb :call CdBaseDir()<CR>
+"python calculator
+:py from math import *
+:command! -nargs=+ Calc :py print <args>
+"UTF-8 convertor
+:command! -nargs=0 ConvertToUtf8 :call ConvertToUtf8()
+
 "some custom vim function
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "base Directory
@@ -151,6 +290,13 @@ function! TagbarZoom()
             :wincmd p
         endif
     endif
+endfunc
+
+"batch convert to UTF-8
+function! ConvertToUtf8()
+    let fileExt = "*.".expand("%:e")
+    exec "args ".fileExt
+    exec "argdo set fenc=utf-8 | update"
 endfunc
 
 function! NERDTreeZoom()
@@ -305,20 +451,6 @@ function! EchoHighlightGroup()
 endfunc
 
 
-"map function with short key
-nnoremap <F1> :h 
-inoremap <F1> <ESC>:h 
-nnoremap <F2> :GundoToggle<CR>
-nnoremap <F3> :call Astyle()<CR>
-nnoremap <F4> :call Compile()<CR>
-nnoremap <F5> :call Run()<CR>
-nnoremap <F6> :call Debug()<CR>
-nnoremap <F7> :NERDTreeToggle<CR>
-nnoremap <F8> :TagbarToggle<CR>
-nnoremap <F10> :Grep<CR>
-nnoremap <F11> :call ToggleMenuBar()<CR>
-nnoremap <F12> :call EchoHighlightGroup()<CR>
-
 "General setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "language & encoding
@@ -337,40 +469,6 @@ set shiftwidth=4
 set backspace=2
 set nowrap
 set linespace=0
-"Fold Code With Space
-nnoremap <silent> <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
-nnoremap <silent> <S-space> @=(HasFoldedLine() ? 'zR' : 'zM')<CR>
-"auto indent
-au Bufwrite,FileReadPre * call FormatIndent()
-"local cd dir
-au BufEnter * lcd %:p:h 
-au BufNew * let b:winVerticalZoomed = 0 | let b:winHorizontalZoomed = 0
-"auto set number"
-set number
-au FocusLost * call SetNumber()
-au FocusGained * call SetRelativeNumber()
-au InsertEnter * call SetNumber()
-au InsertLeave * call SetRelativeNumber()
-"no number for plug-in
-au FileType tagbar call NoNumber() | setl nospell
-au FileType nerdtree call NoNumber()| setl nospell
-au FileType gundo call NoNumber()| setl nospell
-au FileType diff call NoNumber()| setl nospell
-au FileType qf setl nospell 
-"map <C-[> to <C-o> in help file"
-au FileType help :nnoremap <buffer> <C-[> <C-o>
-au FileType help :nnoremap <buffer> q :q<CR>
-au FileType help call SetNumber()
-"MRU quick select"
-au FileType mru call QuickSelectMap()
-
-au BufReadPost * call RestoreCursorPos()
-function! NeoCache()
-    :NeoCompleteTagMakeCache
-    :NeoCompleteIncludeMakeCache
-    :NeoCompleteBufferMakeCache
-endfunc
-"au BufNew * :call NeoCache()
 "ctags
 set tags=tags
 set history=200
@@ -447,6 +545,37 @@ function! ShortTabLabel ()
 endfunction
 
 set guitablabel=%{ShortTabLabel()}
+"auto indent
+au Bufwrite,FileReadPre * call FormatIndent()
+"local cd dir
+au BufEnter * lcd %:p:h 
+au BufNew * let b:winVerticalZoomed = 0 | let b:winHorizontalZoomed = 0
+"auto set number"
+set number
+au FocusLost * call SetNumber()
+au FocusGained * call SetRelativeNumber()
+au InsertEnter * call SetNumber()
+au InsertLeave * call SetRelativeNumber()
+"no number for plug-in
+au FileType tagbar call NoNumber() | setl nospell
+au FileType nerdtree call NoNumber()| setl nospell
+au FileType gundo call NoNumber()| setl nospell
+au FileType diff call NoNumber()| setl nospell
+au FileType qf setl nospell 
+"map <C-[> to <C-o> in help file"
+au FileType help :nnoremap <buffer> <C-[> <C-o>
+au FileType help :nnoremap <buffer> q :q<CR>
+au FileType help call SetNumber()
+"MRU quick select"
+au FileType mru call QuickSelectMap()
+
+au BufReadPost * call RestoreCursorPos()
+function! NeoCache()
+    :NeoCompleteTagMakeCache
+    :NeoCompleteIncludeMakeCache
+    :NeoCompleteBufferMakeCache
+endfunc
+"au BufNew * :call NeoCache()
 
 "status line
 hi CurrentLine guibg=#424242 ctermbg=238
@@ -473,8 +602,8 @@ hi User8 guifg=#eeeeee guibg=#ac0317 ctermfg=255 ctermbg=124
 
 set statusline =
 set statusline +=%1*[%n]\ 
-set statusline +=%6*\ %f\ 
-set statusline +=%2*%y%m%<
+set statusline +=%6*\ %f\ %<
+set statusline +=%2*%y%m
 set statusline +=%6*\ %{&ff}\ \|\ %{(&fenc==\"\"?&enc:&fenc)}\ 
 set statusline +=%7*%=%{strftime('%H:%M')}\ 
 set statusline +=%8*%{ErrorSign()}
@@ -495,124 +624,6 @@ hi diffRemoved guifg=#ff8888  ctermfg=174
 hi diffAdded guifg=#88ff88  ctermfg=120 
 hi diffNewFile guifg=#d0d0d0 ctermfg=252
 hi diffFile guifg=#fd971f ctermfg=208
-"short mapping
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-inoremap jk <ESC>
-nnoremap ; :
-vnoremap ; :
-snoremap ; :
-nnoremap <leader><space> :noh<CR>
-nnoremap <leader>W :update !sudo tee %<CR>
-nnoremap <leader>w :update<CR>
-noremap <C-S>	:update<CR>zz
-vnoremap <C-S>	<C-C>:update<CR>zz
-inoremap <C-S>	<ESC>:update<CR>zza
-nnoremap <leader>q :q<CR>
-nnoremap <leader>l :call ListToggle()<CR>
-nnoremap <leader>. :call NumberToggle()<CR>
-nnoremap R :silent! MRU<CR>
-nnoremap <leader>C :Calendar<CR>
-nnoremap <leader>i :call FormatIndent()<CR>
-nnoremap <leader>z :call WindowVerticalZoom()<CR>
-nnoremap <leader>Z :call WindowHorizontalZoom()<CR>
-"copy to line end
-nnoremap Y y$
-"go to middle of current line
-nnoremap gm :call cursor(0, len(getline('.'))/2)<CR>
-"auto center search item
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
-nnoremap <silent> * *zz
-nnoremap <silent> # #zz
-nnoremap <silent> g* g*zz
-nnoremap <silent> g# g#zz
-"move text
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-inoremap <A-j> <Esc>:m .+1<CR>==gi
-inoremap <A-k> <Esc>:m .-2<CR>==gi
-vnoremap <A-j> :m '>+1<CR>gv=gv
-vnoremap <A-k> :m '<-2<CR>gv=gv
-" Code folding options
-nmap <leader>f0 :set foldlevel=0<CR>
-nmap <leader>f1 :set foldlevel=1<CR>
-nmap <leader>f2 :set foldlevel=2<CR>
-nmap <leader>f3 :set foldlevel=3<CR>
-nmap <leader>f4 :set foldlevel=4<CR>
-nmap <leader>f5 :set foldlevel=5<CR>
-nmap <leader>f6 :set foldlevel=6<CR>
-nmap <leader>f7 :set foldlevel=7<CR>
-nmap <leader>f8 :set foldlevel=8<CR>
-nmap <leader>f9 :set foldlevel=9<CR>
-"real Tab
-inoremap <C-Tab> <Tab>
-"hex edit
-nnoremap <leader>h :%!xxd<CR>
-nnoremap <leader>H :%!xxd -r<CR>
-nnoremap <leader>fv :FencView<CR>
-"wrap toggle
-nnoremap <leader>wr :set wrap! wrap?<CR>
-"Auto Complete Bracket
-inoremap {{ {}<ESC>i<CR><CR><ESC>kS
-"Window switch 
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-"split window
-nnoremap <leader>s :vsp 
-nnoremap X :call TagbarZoom()<CR>
-nnoremap Z :call NERDTreeZoom()<CR>
-"resize window
-nnoremap <Leader>= <C-w>=
-nnoremap <leader>[ <C-w>12<
-nnoremap <leader>] <C-w>12>
-nnoremap <leader>{ <C-w>6-
-nnoremap <leader>} <C-w>6+
-"wrap line up down
-nnoremap j gj
-nnoremap k gk
-"disable arrow key
-"nnoremap <up> <nop>
-"nnoremap <down> <nop>
-"nnoremap <left> <nop>
-"nnoremap <right> <nop>
-"inoremap <up> <nop>
-"inoremap <down> <nop>
-"inoremap <left> <nop>
-"inoremap <right> <nop>
-"insert mode move
-inoremap <C-h> <left>
-inoremap <C-j> <down>
-inoremap <C-k> <up>
-inoremap <C-l> <right>
-inoremap jl <right>
-inoremap jf <left>
-"visual indent
-vnoremap > >gv
-vnoremap < <gv
-"quick delete command
-nnoremap <leader>del :g/^\s*$/d<CR>
-nnoremap <leader>dl :g/^$/,/./-j<CR>
-"inc
-noremap <C-i> <C-a>
-"Select all
-noremap <C-A> ggvG$
-inoremap <C-A> <ESC>ggvG$
-"system clipboard paste
-nnoremap <C-q> "+p
-inoremap <C-q> <ESC>"+pa
-"copy to system clipboard
-nnoremap <C-c> "+y
-vnoremap <C-c> "+y
-snoremap <C-c> "+y
-"filename completion
-inoremap <A-f> <C-x><C-f>
-"work base dir
-nnoremap <leader>bb :call CdBaseDir()<CR>
-"python calculator
-:command! -nargs=+ Calc :py print <args>
-:py from math import *
 "plug-in  setting
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "css color
@@ -659,8 +670,13 @@ let g:AutoClosePairs = "() {} [] \""
 let g:AutoCloseProtectedRegions = []
 "Syntastic 
 let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_wq=0
-au VimEnter * :SyntasticToggleMode
+"finally disabled
+let g:syntastic_check_on_wq = 0
+let g:syntastic_disabled_filetypes = "*"
+let g:syntastic_mode_map = { "mode": "passive",
+            \ "active_filetypes": [],
+            \ "passive_filetypes": [] }
+
 "GUndo
 let g:gundo_width = 24
 let g:gundo_preview_height = 16
@@ -677,5 +693,15 @@ if has("win32")
     let g:neocomplete#release_cache_time = 300
     let g:neocomplete#force_overwrite_completefunc = 1
     let g:neocomplete#sources#buffer#cache_limit_size = 12097152
-    au VimEnter * call neocomplete#initialize() 
+    au VimEnter * call neocomplete#initialize()
 endif
+
+function! PhpSyntaxOverride()
+    hi! def link phpDocTags  phpDefine
+    hi! def link phpDocParam phpType
+endfunction
+
+augroup phpSyntaxOverride
+    autocmd!
+    autocmd FileType php call PhpSyntaxOverride()
+augroup END
